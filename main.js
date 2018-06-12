@@ -8,7 +8,7 @@ let result = [];
 
 // START!!!
 
-let setting = mapping.setBoard(36);
+let setting = mapping.setBoard(81);
 let board = new Array2d(setting.xSize, setting.ySize, 0);
 board = mapping.generateBoard(setting);
 console.log(board.toString());

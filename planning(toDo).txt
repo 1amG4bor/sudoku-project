@@ -1,0 +1,26 @@
+Sudoku project (ver-0.0.1)
+
+tábla lerenderelése
+solver
+tábla beállítása számok törlésével
+
+opciók:
+játéktípusok: 
+Sizes   -   cells --->  min clues
+2*2*4   =   16    --->  4
+3*2*6   =   36    --->  8
+3*3*9   =   81    --->  17
+nehézségi szintek: easy, medium, hard
+
+GUI
+kezdőképernyő az opciválasztással (lásd fent)
+játékképernyő
+tábla megjelenítés
+div-ek elválasztása
+navigálás cursor billentyűkkel
+cursor pozíció kiemelése
+szerkesztés enterrel
+kezdő adatok szerkesztésének tiltása
+rossz adat jelzése speciális (pl.: piros) színnel
+időszámláló
+

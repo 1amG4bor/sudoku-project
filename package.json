@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/1amG4bor/sudoku-project#readme",
   "dependencies": {
+    "array-2d": "^1.0.2",
     "readline-sync": "^1.4.9",
-    "table": "^4.0.3"
-  }
+    "table": "^4.0.3",
+    "terminal-keypress": "^0.4.4"
+  },
+  "devDependencies": {}
 }

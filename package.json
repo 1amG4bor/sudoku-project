@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/1amG4bor/sudoku-project#readme",
   "dependencies": {
+    "clone": "^2.1.1",
     "readline-sync": "^1.4.9",
     "table": "^4.0.3"
   }

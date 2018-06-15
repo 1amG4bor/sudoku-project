@@ -20,6 +20,8 @@ div-ek elválasztása
 navigálás cursor billentyűkkel
 cursor pozíció kiemelése
 szerkesztés enterrel
+egyéb command elemek
+info panel
 kezdő adatok szerkesztésének tiltása
 rossz adat jelzése speciális (pl.: piros) színnel
 időszámláló

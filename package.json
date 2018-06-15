@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/1amG4bor/sudoku-project#readme",
   "dependencies": {
+    "clone": "^2.1.1",
     "array-2d": "^1.0.2",
     "array2d": "0.0.5",
     "fixed-2d-array": "^2.0.0",

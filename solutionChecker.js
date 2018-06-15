@@ -2,7 +2,7 @@ const solvingMethod = {
 
   checkHorizontal: (board, y, newPossibleValues) => {
     for (let j = 0; j < board.length; j++) {
-      if (board[y][j] !== 0) {
+      if (board[y][j] !== ' ') {
         newPossibleValues[board[y][j] - 1] = 0;
       }
     }
@@ -10,7 +10,7 @@ const solvingMethod = {
 
   checkVertical: (board, x, newPossibleValues) => {
     for (let i = 0; i < board.length; i++) {
-      if (board[i][x] !== 0) {
+      if (board[i][x] !== ' ') {
         newPossibleValues[board[i][x] - 1] = 0;
       }
     }
@@ -23,7 +23,7 @@ const solvingMethod = {
 
     for (let i = k; i < k + boxLength; i++) {
       for (let j = l; j < l + boxLength; j++) {
-        if (board[i][j] !== 0) {
+        if (board[i][j] !== ' ') {
           newPossibleValues[board[i][j] - 1] = 0;
         }
       }
@@ -45,7 +45,7 @@ const solvingMethod = {
   findEmptyValue: (board) => {
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board.length; j++) {
-        if (board[i][j] === 0) {
+        if (board[i][j] === ' ') {
           return {
             y: i,
             x: j
@@ -68,7 +68,7 @@ const solvingMethod = {
         solutionCount += solvingMethod.tryPossibleValues(board, solvingMethod.findEmptyValue(board));
       }
     }
-    board[currentCell.y][currentCell.x] = 0;
+    board[currentCell.y][currentCell.x] = ' ';
     return solutionCount;
   }
 };

@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/1amG4bor/sudoku-project#readme",
   "dependencies": {
-    "ansi": "^0.3.1",
     "array-2d": "^1.0.2",
     "axel": "0.0.3",
     "cli-interact": "^0.1.9",

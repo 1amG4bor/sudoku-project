@@ -1,10 +1,11 @@
 const ctx = require('axel');
-ctx.clear();
+let cBlack = (0, 0, 0);
 
 const backGround = () => {
   // kék keret
-  ctx.bg(0, 153, 153);
+  ctx.bg(0, 0, 0);
   ctx.box(2, 2, 83, 36);
+  ctx.scrub(4, 4, 20, 20);
 
   // fekete hatter
   ctx.bg(0, 0, 0);
@@ -90,4 +91,24 @@ const level = () => {
   ctx.text(31, 24, 'HARD');
   ctx.text(25, 26, 'and press Enter');
 };
+
+const gameSize = () => {
+  ctx.bg(255, 153, 0);
+  ctx.fg(0, 0, 0);
+  ctx.box(23, 17, 21, 11);
+
+  ctx.text(25, 18, 'Choose boardsize:');
+  ctx.text(29, 20, '2 x 2 [4]');
+  ctx.text(29, 22, '3 x 2 [6]');
+  ctx.text(29, 24, '3 x 3 [9]');
+  ctx.text(26, 26, 'and press Enter');
+};
+
+ctx.clear();
+backGround();
+commandLine();
+infoWindow();
+sudokuMolino();
+gameSize();
+//level();
 ctx.cursor.restore();

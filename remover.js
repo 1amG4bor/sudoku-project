@@ -16,20 +16,20 @@ for (let i = 0; i < 9; i++) {
   }
   board.a.splice(0, 9);
 }
-/*
+
 let n;
 let difficulties = ['Easy', 'Medium', 'Hard'];
 let difficulty = readlineSync.keyInSelect(difficulties, 'Válassz nehézségi szintet!');
 if (difficulty === 0) {
   n = 45;
 } else if (difficulty === 1) {
-  n = 54;
+  n = 50;
 } else {
-  n = 64;
+  n = 56;
 }
-*/
+
 let removedNumbers = 0;
-while (removedNumbers < 58) {
+while (removedNumbers < n) {
   let y = Math.floor(Math.random() * sudokuBoard.length);
   let x = Math.floor(Math.random() * sudokuBoard.length);
 

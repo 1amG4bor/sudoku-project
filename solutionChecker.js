@@ -1,4 +1,14 @@
 const solvingMethod = {
+  clone: (board) => {
+    let clonedBoard = [];
+    for (let i = 0; i < board.length; i++) {
+      clonedBoard[i] = [];
+      for (let j = 0; j < board.length; j++) {
+        clonedBoard[i][j] = board[i][j];
+      }
+    }
+    return clonedBoard;
+  },
 
   checkHorizontal: (board, y, newPossibleValues) => {
     for (let j = 0; j < board.length; j++) {
@@ -56,16 +66,22 @@ const solvingMethod = {
     return null;
   },
 
-  tryPossibleValues: (board, currentCell) => {
+  calculateNumberOfSolutions: (board, currentCell) => {
     if (currentCell === null) {
       return 1;
     }
+
     let possibleValues = solvingMethod.findPossibleValues(board, currentCell.y, currentCell.x);
+
     let solutionCount = 0;
     for (let i = 0; i < possibleValues.length; i++) {
       if (possibleValues[i] !== 0) {
         board[currentCell.y][currentCell.x] = possibleValues[i];
-        solutionCount += solvingMethod.tryPossibleValues(board, solvingMethod.findEmptyValue(board));
+
+        solutionCount += solvingMethod.calculateNumberOfSolutions(board, solvingMethod.findEmptyValue(board));
+        if (solutionCount > 1) {
+          return solutionCount;
+        }
       }
     }
     board[currentCell.y][currentCell.x] = ' ';

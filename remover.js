@@ -28,9 +28,9 @@ while (removedNumbers <= 45) {
   let y = Math.floor((Math.random() * sudokuBoard.length));
   let x = Math.floor((Math.random() * sudokuBoard.length));
 
-  if (sudokuBoard[y][x] !== 0) {
+  if (sudokuBoard[y][x] !== '') {
     let originalValue = sudokuBoard[y][x];
-    sudokuBoard[y][x] = 0;
+    sudokuBoard[y][x] = '';
     let numberOfsolution = solvingMethod.tryPossibleValues(sudokuBoard, solvingMethod.findEmptyValue(sudokuBoard));
     if (numberOfsolution !== 1) {
       sudokuBoard[y][x] = originalValue;

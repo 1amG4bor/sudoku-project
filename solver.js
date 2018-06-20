@@ -1,4 +1,4 @@
-let sudokuBoard = [
+let board = [
   [8, 6, 0, 0, 2, 0, 0, 0, 0],
   [0, 0, 0, 7, 0, 0, 0, 5, 9],
   [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -102,4 +102,4 @@ const solver = (board, currentCell) => {
   return false;
 };
 
-console.log(solver(sudokuBoard, findFirstEmptyValue(sudokuBoard)));
+console.log(solver(board, findFirstEmptyValue(board)));

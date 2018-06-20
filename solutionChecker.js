@@ -66,6 +66,15 @@ const solvingMethod = {
     return null;
   },
 
+  shuffle: (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      let temp = array[i];
+      array[i] = array[j];
+      array[j] = temp;
+    }
+  },
+
   calculateNumberOfSolutions: (board, currentCell) => {
     if (currentCell === null) {
       return 1;
@@ -86,6 +95,28 @@ const solvingMethod = {
     }
     board[currentCell.y][currentCell.x] = ' ';
     return solutionCount;
+  },
+
+  generateBoard: (board, currentCell) => {
+    if (currentCell === null) {
+      return board;
+    }
+
+    let possibleValues = solvingMethod.findPossibleValues(board, currentCell.y, currentCell.x);
+    solvingMethod.shuffle(possibleValues);
+
+    for (let i = 0; i < possibleValues.length; i++) {
+      if (possibleValues[i] !== 0) {
+        board[currentCell.y][currentCell.x] = possibleValues[i];
+
+        const solution = solvingMethod.generateBoard(board, solvingMethod.findEmptyValue(board));
+        if (solution !== null) {
+          return solution;
+        }
+      }
+    }
+    board[currentCell.y][currentCell.x] = ' ';
+    return null;
   }
 };
 

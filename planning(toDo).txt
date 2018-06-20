@@ -11,6 +11,9 @@ Sizes   -   cells --->  min clues
 3*2*6   =   36    --->  8
 3*3*9   =   81    --->  17
 nehézségi szintek: easy, medium, hard
+16  6 -8 -10
+81  18-27-36
+
 
 GUI
 kezdőképernyő az opciválasztással (lásd fent)
@@ -20,6 +23,8 @@ div-ek elválasztása
 navigálás cursor billentyűkkel
 cursor pozíció kiemelése
 szerkesztés enterrel
+egyéb command elemek
+info panel
 kezdő adatok szerkesztésének tiltása
 rossz adat jelzése speciális (pl.: piros) színnel
 időszámláló

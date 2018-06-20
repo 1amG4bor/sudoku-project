@@ -26,6 +26,14 @@ const gfx = {
   },
 
   drawMenu: (level, time, remainedCell, record) => {
+
+    let totalSeconds = 0;
+    setInterval(setTime, 1000);
+    
+    function setTime() {
+      ++totalSeconds;
+      console.log(totalSeconds);
+    }    
     // game menu
     ctx.fg(255, 204, 0);
     ctx.text(60, 16, 'Level: ');
@@ -33,6 +41,7 @@ const gfx = {
     ctx.text(60, 20, 'Remained: ');
     ctx.text(60, 22, 'Record: ');
     // input div
+    ctx.fg(0,0,0);
     ctx.bg(255, 204, 0);
     ctx.text(70, 16, '        ');
     ctx.text(70, 18, '        ');
@@ -140,9 +149,12 @@ const gfx = {
       case 4:
         for (let i = 0; i < 2; i++) {
           for (let j = 0; j < 2; j++) {
-            let x = 14 + (20 * j);
-            let y = 8 + (10 * i);
-            ctx.bg(51, 51, 51);
+            let x = 11 + (21 * j);
+            let y = 4 + (11 * i);
+            if ((i + j) % 2 === 0) { // változó hatterszin
+              ctx.bg(51, 51, 51);
+              ctx.box(x, y, 16, 8);
+            } else ctx.bg(102, 102, 102);
             ctx.box(x, y, 16, 8);
           }
         }
@@ -166,12 +178,27 @@ const gfx = {
             let x = 3 + (13 * j);
             let y = 3 + (5 * i);
             if ((i + j) % 2 === 0) { // változó hatterszin
-              ctx.bg(51, 51, 51);
+              ctx.bg(102, 102, 102);
               ctx.box(x, y, 13, 6);
-            } else ctx.bg(102, 102, 102);
+            } else ctx.bg(51, 51, 51);
             ctx.box(x, y, 13, 6);
           }
         }
+        ctx.bg(0, 153, 153);
+        ctx.line(1, 1, 57, 1);
+        ctx.line(1, 24, 57, 24);
+        ctx.bg(0, 0, 0);
+        ctx.line(2, 3, 55, 3);
+        ctx.line(2, 8, 55, 8);
+        ctx.line(2, 13, 55, 13);
+        ctx.line(2, 18, 55, 18);
+        ctx.line(2, 23, 55, 23);
+
+        ctx.box(15, 2, 2, 22);
+        ctx.box(28, 2, 2, 22);
+        ctx.box(41, 2, 2, 22);
+
+
         break;
     }
     // Cells
@@ -180,16 +207,18 @@ const gfx = {
       for (let i = 0; i < gameBoard.length; i++) {
         let m = calcPosition(i, j, gameBoard.length)[0];
         let n = calcPosition(i, j, gameBoard.length)[1];
-        if (m === 1) { // változó kurzorhatter
-          ctx.bg(255, 255, 255);
-        } else (ctx.bg(153, 102, 102));
+        let sectionX = Math.floor(i / Math.sqrt(gameBoard.length));
+        let sectiony = Math.floor(j / Math.sqrt(gameBoard.length));
+        if ((sectionX + sectiony) % 2 === 0) ctx.bg(102, 102, 102);
+        else (ctx.bg(51, 51, 51));
+        ctx.fg(0, 0, 0);
         switch (gameBoard.length) {
           case 4:
             ctx.box(m - 1, n, 3, 1);
             if (gameBoard[i][j].toString() !== '') ctx.text(m, n, gameBoard[i][j].toString());
             break;
           case 9: // ok
-            ctx.box(m, n, 1, 1);
+            ctx.box(m - 1, n, 3, 1);
             if (gameBoard[i][j].toString() !== '') ctx.text(m, n, gameBoard[i][j].toString());
             break;
           case 16:
@@ -211,8 +240,8 @@ const gfx = {
     ctx.bg(204, 153, 0);
     ctx.fg(255, 0, 0);
     let value = gameBoard[cursorState[0]][cursorState[1]].toString();
-    console.log('gfxPos= ' + x + ',' + y);
-    console.log('value= ' + value);
+    //console.log('gfxPos= ' + x + ',' + y);
+    //console.log('value= ' + value);
     switch (menuIndex[0]) {
       case 1:
         ctx.box(x - 2, y, 5, 1);
@@ -251,8 +280,8 @@ function calcPosition(x, y, tableLength) {
   let gfxPos = [];
   switch (tableLength) {
     case 4:
-      m = 18 + (7 * x) + ((Math.floor(x / 2) * 6));
-      n = 10 + (3 * y) + ((Math.floor(y / 2) * 4));
+      m = 15 + (7 * x) + ((Math.floor(x / 2) * 7));
+      n = 6 + (3 * y) + ((Math.floor(y / 2) * 5));
       break;
     case 9: // ok
       m = 12 + (4 * x) + ((Math.floor(x / 3) * 1));
@@ -266,3 +295,4 @@ function calcPosition(x, y, tableLength) {
   gfxPos.push(m, n);
   return gfxPos;
 }
+

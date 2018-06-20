@@ -1,30 +1,26 @@
 // ###===---> Sudoku v0.0.1 <---===###
 
 // npm Packages:
-// const readline = require('readline-sync');
-const ctx = require('axel');
-const GFX = require('./graphics');
-// let Delay = require('delay');
-let { table } = require('table');
+let ctx = require('axel');
 let term = require('terminal-kit').terminal;
 // OwnPackeges
 const mapping = require('./mapping');
-let solvingMethod = require('./solutionChecker.js');
+const GFX = require('./graphics');
+const solvingMethod = require('./solutionChecker');
+const remover = require('./remover');
 term.windowTitle('S u d o k u \t\t v-0.0.1 \t\t\t\t\t by: FlowAcademy\'s students, author: g4bor, Remiee, VarGabi87');
 
 // declaration
 let board = [];
 let fixed;
+let timer = 0;
 
-let output;
-let result = [];
-
-let pressedKey;
+let pressedKey = null;
 let gameState = 'inTypeMenu';
 let menuIndex = [2, 2];
 let cursorState = [0, 0];
+let userInput = '';
 // FUNCTIONS
-
 term.grabInput();
 term.on('key', function (key) {
   if (key === 'CTRL_C') { process.exit(); } // Detect CTRL-C and exit 'manually'
@@ -52,6 +48,7 @@ term.on('key', function (key) {
           makeBoard(menuIndex);
           cursorState[0] = 0;
           cursorState[1] = 0;
+          startClock();
         }
         break;
       case 'ESCAPE':
@@ -60,7 +57,7 @@ term.on('key', function (key) {
     }
   } else if (gameState === 'inGame') {
     // Navigate and play on game board!
-    let end = board.length;
+    let end = board.length - 1;
     switch (key) {
       case 'UP':
         if (cursorState[1] > 0) cursorState[1]--;
@@ -75,10 +72,10 @@ term.on('key', function (key) {
         if (cursorState[0] < end) cursorState[0]++;
         break;
       case 'ENTER':
-
+        gameState = 'editMode';
         break;
       case 'ESCAPE':
-      gameState = 'inGameMenu';
+        gameState = 'inTypeMenu';
         break;
       case 'C':
 
@@ -90,33 +87,59 @@ term.on('key', function (key) {
 
         break;
     }
-  }
-  pressedKey = key; // THIS line WILL BE DELETED!
-  reDraw(gameState, menuIndex, cursorState);
-});
-
-const removeCells = (board, level, fixed) => {
-  let cellDecrease = level;
-  let removedNumbers = 0;
-  while (removedNumbers <= cellDecrease) {
-    let y = Math.floor((Math.random() * (board.length - 1)));
-    let x = Math.floor((Math.random() * (board.length - 1)));
-
-    if (board[y][x] !== 0) {
-      let originalValue = board[y][x];
-      board[y][x] = '';
-      let i = parseInt((x * (board.length + 1) + y));
-      fixed[i].x = null;
-      fixed[i].y = null;
-      fixed[i].value = null;
-      let numberOfsolution = solvingMethod.tryPossibleValues(board, solvingMethod.findEmptyValue(board));
-      if (numberOfsolution !== 1) {
-        board[y][x] = originalValue;
-      } else {
-        removedNumbers++;
-      }
+  } else if (gameState === 'editMode') {
+    switch (key) {
+      case 'ENTER':
+        board[cursorState[0]][cursorState[1]] = userInput;
+        userInput = '';
+        gameState = 'inGame';
+        break;
+      case 'ESCAPE':
+        userInput = '';
+        gameState = 'inGame';
+        break;
+      default:
+        term.moveTo(20, 31, 'k> ' + key);
+        term.moveTo(25, 31, 'c> ' + key.charCodeAt(0));
+        if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
+          pressedKey = key;
+          let limit = 1;
+          if (board.length > 9) limit = 2;
+          if (userInput.length < limit) userInput += key;
+          else userInput = userInput.slice(userInput.length - 1) + key;
+        }
+        break;
     }
   }
+  // pressedKey = key; // THIS line WILL BE DELETED!
+  if (gameState !== 'editMode') reDraw(gameState, menuIndex, cursorState);
+  else modifyCell(board, cursorState, pressedKey, key);
+});
+
+// Timer
+
+const startClock = () => {
+  setInterval(setTime, 1000);
+}
+const setTime = () => {
+  timer++;
+  reDraw(gameState, menuIndex, cursorState);
+}
+
+// Make board
+const makeBoard = (menuIndex) => {
+  let boardSize;
+  if (menuIndex[0] === 1) boardSize = 4;
+  else if (menuIndex[0] === 2) boardSize = 9;
+  else if (menuIndex[0] === 3) boardSize = 16;
+  let setting = mapping.setBoard(boardSize);
+  board = remover.generateEmptyBoard(boardSize);
+  board = solvingMethod.generateBoard(board, solvingMethod.findEmptyValue(board));
+  console.log(board);
+  fixed = readFixNums(board);
+  remover.cellRemover(board, remover.collectCoordinates(board), 0);
+  // need to set numbers for difficulty level
+  //console.log(fixed);
 };
 
 const readFixNums = (gameBoard) => {
@@ -133,6 +156,7 @@ const readFixNums = (gameBoard) => {
 
 const reDraw = (menu, index, cursor) => {
   // console.log('\x1Bc');
+  // term.hideCursor();
   ctx.clear();
   GFX.drawInterface();
   switch (menu) {
@@ -154,39 +178,21 @@ const reDraw = (menu, index, cursor) => {
   GFX.drawInfoBar();
   // GFX.drawMenu('med', '0:00', '45', '0:42');
   if (menu === 'inGame') {
-    GFX.drawMenu('', '', '', '');
+    GFX.drawMenu(menuIndex[1], timer, '?', 'N/A');
     GFX.drawCursor(index, cursor, board);
   }
-  term.moveTo(1, 1, pressedKey + ' was pressed, menuindex= ' + menuIndex);
+  term.moveTo(1, 1, pressedKey + ' was pressed, >menuindex= ' + menuIndex + ' >cursorState= ' + cursorState);
+  term.moveTo(1, 31, '> ' + gameState);
   ctx.cursor.restore();
 };
 
-// Draw the board
-const drawBoard = (gameBoard, setting) => {
-  for (let i = 0; i < setting.ySize; i++) {
-    result[i] = [];
-    for (let j = 0; j < setting.xSize; j++) result[i][j] = gameBoard[i][j];
-  }
-  output = table(result);
-  console.log(output);
-};
-// Make board
-const makeBoard = (menuIndex) => {
-  let boardSize = 4;
-  if (menuIndex[0] === 1) boardSize = 4;
-  else if (menuIndex[0] === 2) boardSize = 9;
-  else if (menuIndex[0] === 3) boardSize = 16;
-  let setting = mapping.setBoard(boardSize);
-  for (let i = 0; i < setting.ySize; i++) {
-    board[i] = [];
-    for (let j = 0; j < setting.xSize; j++) board[i][j] = 0;
-  }
-  board = mapping.generateBoard(setting);
-  fixed = readFixNums(board);
-  removeCells(board, 40, fixed);
-  console.log(fixed);
-  // console.log('\x1Bc');
-  // reDraw(gameState, menuIndex);
+const modifyCell = (board, cursorState, pressedKey, key) => {
+  term.moveTo(30, 40, '> ' + userInput); // log
+  let currentPos = GFX.calcPosition(cursorState[0], cursorState[1], board.length);
+  term.moveTo(currentPos[0], currentPos[1]);
+  term.bgColorRgb(255, 153, 0).red(pressedKey);
+  term.moveTo(currentPos[0], currentPos[1]);
+  term.bgColorRgb(0, 0, 0).red(pressedKey);
 };
 
 // Load the game

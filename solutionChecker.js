@@ -1,6 +1,6 @@
 const solvingMethod = {
   clone: (board) => {
-    let clonedBoard = [];
+    const clonedBoard = [];
     for (let i = 0; i < board.length; i++) {
       clonedBoard[i] = [];
       for (let j = 0; j < board.length; j++) {
@@ -27,9 +27,9 @@ const solvingMethod = {
   },
 
   checkBox: (board, y, x, newPossibleValues) => {
-    let boxLength = Math.sqrt(board.length);
-    let k = Math.floor(y / boxLength) * boxLength;
-    let l = Math.floor(x / boxLength) * boxLength;
+    const boxLength = Math.sqrt(board.length);
+    const k = Math.floor(y / boxLength) * boxLength;
+    const l = Math.floor(x / boxLength) * boxLength;
 
     for (let i = k; i < k + boxLength; i++) {
       for (let j = l; j < l + boxLength; j++) {
@@ -41,7 +41,7 @@ const solvingMethod = {
   },
 
   findPossibleValues: (board, y, x) => {
-    let possibleValues = [];
+    const possibleValues = [];
     for (let i = 0; i < board.length; i++) {
       possibleValues[i] = i + 1;
     }
@@ -80,7 +80,7 @@ const solvingMethod = {
       return 1;
     }
 
-    let possibleValues = solvingMethod.findPossibleValues(board, currentCell.y, currentCell.x);
+    const possibleValues = solvingMethod.findPossibleValues(board, currentCell.y, currentCell.x);
 
     let solutionCount = 0;
     for (let i = 0; i < possibleValues.length; i++) {
@@ -102,7 +102,7 @@ const solvingMethod = {
       return board;
     }
 
-    let possibleValues = solvingMethod.findPossibleValues(board, currentCell.y, currentCell.x);
+    const possibleValues = solvingMethod.findPossibleValues(board, currentCell.y, currentCell.x);
     solvingMethod.shuffle(possibleValues);
 
     for (let i = 0; i < possibleValues.length; i++) {

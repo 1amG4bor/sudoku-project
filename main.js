@@ -99,8 +99,8 @@ term.on('key', function (key) {
         gameState = 'inGame';
         break;
       default:
-        term.moveTo(20, 31, 'k> ' + key);
-        term.moveTo(25, 31, 'c> ' + key.charCodeAt(0));
+        // term.moveTo(20, 31, 'k> ' + key);
+        // term.moveTo(25, 31, 'c> ' + key.charCodeAt(0));
         if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
           pressedKey = key;
           let limit = 1;
@@ -120,11 +120,11 @@ term.on('key', function (key) {
 
 const startClock = () => {
   setInterval(setTime, 1000);
-}
+};
 const setTime = () => {
   timer++;
   reDraw(gameState, menuIndex, cursorState);
-}
+};
 
 // Make board
 const makeBoard = (menuIndex) => {
@@ -139,7 +139,7 @@ const makeBoard = (menuIndex) => {
   fixed = readFixNums(board);
   remover.cellRemover(board, remover.collectCoordinates(board), 0);
   // need to set numbers for difficulty level
-  //console.log(fixed);
+  // console.log(fixed);
 };
 
 const readFixNums = (gameBoard) => {
@@ -155,8 +155,8 @@ const readFixNums = (gameBoard) => {
 };
 
 const reDraw = (menu, index, cursor) => {
-  // console.log('\x1Bc');
-  // term.hideCursor();
+  console.log('\x1Bc');
+  term.hideCursor();
   ctx.clear();
   GFX.drawInterface();
   switch (menu) {
@@ -181,8 +181,8 @@ const reDraw = (menu, index, cursor) => {
     GFX.drawMenu(menuIndex[1], timer, '?', 'N/A');
     GFX.drawCursor(index, cursor, board);
   }
-  term.moveTo(1, 1, pressedKey + ' was pressed, >menuindex= ' + menuIndex + ' >cursorState= ' + cursorState);
-  term.moveTo(1, 31, '> ' + gameState);
+  // term.moveTo(1, 1, pressedKey + ' was pressed, >menuindex= ' + menuIndex + ' >cursorState= ' + cursorState);
+  // term.moveTo(1, 31, '> ' + gameState);
   ctx.cursor.restore();
 };
 
@@ -190,9 +190,8 @@ const modifyCell = (board, cursorState, pressedKey, key) => {
   term.moveTo(30, 40, '> ' + userInput); // log
   let currentPos = GFX.calcPosition(cursorState[0], cursorState[1], board.length);
   term.moveTo(currentPos[0], currentPos[1]);
-  term.bgColorRgb(255, 153, 0).red(pressedKey);
+  term.setCursorColorRgb(255, 0, 0).red(pressedKey);
   term.moveTo(currentPos[0], currentPos[1]);
-  term.bgColorRgb(0, 0, 0).red(pressedKey);
 };
 
 // Load the game

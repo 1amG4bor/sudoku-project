@@ -12,12 +12,12 @@ const gfx = {
     ctx.box(58, 15, 22, 9);
   },
 
-  drawMenu: (menuIndex, timer, remainedCell, rec) => {
+  drawMenu: (levelNum, timer, remainedCell, record) => {
     let level = 'N/A';
     let time = calculateTime(timer);
-    if (menuIndex[1] === 0) level = 'easy';
-    else if (menuIndex[1] === 1) level = 'medium';
-    else if (menuIndex[1] === 2) level = 'hard';
+    if (levelNum === 1) level = 'easy';
+    else if (levelNum === 2) level = 'medium';
+    else if (levelNum === 3) level = 'hard';
     // game menu
     ctx.fg(255, 204, 0);
     ctx.text(60, 16, 'Level: ');
@@ -25,7 +25,7 @@ const gfx = {
     ctx.text(60, 20, 'Remained: ');
     ctx.text(60, 22, 'Record: ');
     // input div
-    ctx.fg(0,0,0);
+    ctx.fg(0, 0, 0);
     ctx.bg(255, 204, 0);
     ctx.text(70, 16, '        ');
     ctx.text(70, 18, '        ');
@@ -33,10 +33,10 @@ const gfx = {
     ctx.text(70, 22, '        ');
     // test data
     ctx.fg(0, 0, 0);
-    ctx.text(75, 22, level);
-    ctx.text(75, 24, time);
-    ctx.text(75, 26, remainedCell);
-    ctx.text(75, 29, record);
+    ctx.text(71, 16, level);
+    ctx.text(71, 18, time);
+    ctx.text(71, 20, remainedCell);
+    ctx.text(71, 22, record);
   },
 
   drawLogo: (x, y) => {
@@ -52,9 +52,6 @@ const gfx = {
     ctx.text(4, 7, '╚════██║██║   ██║██║  ██║██║   ██║██╔═██╗ ██║   ██║');
     ctx.text(4, 8, '███████║╚██████╔╝██████╔╝╚██████╔╝██║  ██╗╚██████╔╝');
     ctx.text(4, 9, '╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ');
-
-
-
   },
 
   drawInfoBar: () => {
@@ -122,11 +119,13 @@ const gfx = {
 
   drawGameBoard: (gameBoard, fixed) => {
     // Mini logo
-    /*ctx.bg(0, 153, 153);
+    /*
+    ctx.bg(0, 153, 153);
     ctx.box(12, 2, 40, 2);
     ctx.fg(255, 204, 0);
     ctx.bg(153, 0, 0);
-    ctx.text(18, 2, '   S   U   D   O   K   U   '); */
+    ctx.text(18, 2, '   S   U   D   O   K   U   ');
+    */
     // >>> MainBoard <<<
     // Grid
     switch (gameBoard.length) {
@@ -181,16 +180,14 @@ const gfx = {
         ctx.box(15, 2, 2, 22);
         ctx.box(28, 2, 2, 22);
         ctx.box(41, 2, 2, 22);
-
-
         break;
     }
     // Cells
 
     for (let j = 0; j < gameBoard.length; j++) {
       for (let i = 0; i < gameBoard.length; i++) {
-        let m = calcPosition(i, j, gameBoard.length)[0];
-        let n = calcPosition(i, j, gameBoard.length)[1];
+        let m = gfx.calcPosition(i, j, gameBoard.length)[0];
+        let n = gfx.calcPosition(i, j, gameBoard.length)[1];
         let sectionX = Math.floor(i / Math.sqrt(gameBoard.length));
         let sectiony = Math.floor(j / Math.sqrt(gameBoard.length));
         if ((sectionX + sectiony) % 2 === 0) ctx.bg(102, 102, 102);
@@ -224,7 +221,6 @@ const gfx = {
     ctx.bg(204, 153, 0);
     ctx.fg(255, 0, 0);
     let value = gameBoard[cursorState[0]][cursorState[1]].toString();
-    
     switch (menuIndex[0]) {
       case 1:
         ctx.box(x - 2, y, 5, 1);
@@ -249,27 +245,26 @@ const gfx = {
     let gfxPos = [];
     switch (tableLength) {
       case 4:
-        m = 18 + (7 * x) + ((Math.floor(x / 2) * 6));
-        n = 10 + (3 * y) + ((Math.floor(y / 2) * 4));
+        m = 15 + (7 * x) + ((Math.floor(x / 2) * 7));
+        n = 6 + (3 * y) + ((Math.floor(y / 2) * 5));
         break;
       case 9: // ok
-        m = 12 + (4 * x) + ((Math.floor(x / 3) * 3));
-        n = 7 + (2 * y) + ((Math.floor(y / 3) * 2));
+        m = 12 + (4 * x) + ((Math.floor(x / 3) * 1));
+        n = 4 + (2 * y) + ((Math.floor(y / 3) * 1));
         break;
       case 16:
-        m = 6 + (3 * x) + ((Math.floor(x / 4) * 2));
-        n = 5 + (y) + ((Math.floor(y / 4) * 3));
+        m = 4 + (3 * x) + ((Math.floor(x / 4) * 1));
+        n = 4 + (y) + ((Math.floor(y / 4) * 1));
         break;
     }
     gfxPos.push(m, n);
     return gfxPos;
   }
-
 };
 
 module.exports = gfx;
 
-function highlight(state) {
+function highlight (state) {
   if (state === 'on') {
     ctx.bg(153, 0, 0);
     ctx.fg(255, 153, 0);
@@ -279,28 +274,6 @@ function highlight(state) {
   }
 }
 
-
-function calcPosition2(x, y, tableLength) {
-  let m = 0;
-  let n = 0;
-  let gfxPos = [];
-  switch (tableLength) {
-    case 4:
-      m = 15 + (7 * x) + ((Math.floor(x / 2) * 7));
-      n = 6 + (3 * y) + ((Math.floor(y / 2) * 5));
-      break;
-    case 9: // ok
-      m = 12 + (4 * x) + ((Math.floor(x / 3) * 1));
-      n = 4 + (2 * y) + ((Math.floor(y / 3) * 1));
-      break;
-    case 16:
-      m = 4 + (3 * x) + ((Math.floor(x / 4) * 1));
-      n = 4 + (y) + ((Math.floor(y / 4) * 1));
-      break;
-  }
-  gfxPos.push(m, n);
-  return gfxPos;
-
 function calculateTime (second) {
   let time;
   let min, sec;
@@ -309,6 +282,27 @@ function calculateTime (second) {
   if (sec < 10) time = min + ':0' + sec;
   else time = min + ':' + sec;
   return time;
-
 }
-
+/*
+calcPosition: (x, y, tableLength) => {
+  let m = 0;
+  let n = 0;
+  let gfxPos = [];
+  switch (tableLength) {
+    case 4:
+      m = 18 + (7 * x) + ((Math.floor(x / 2) * 6));
+      n = 10 + (3 * y) + ((Math.floor(y / 2) * 4));
+      break;
+    case 9: // ok
+      m = 12 + (4 * x) + ((Math.floor(x / 3) * 3));
+      n = 7 + (2 * y) + ((Math.floor(y / 3) * 2));
+      break;
+    case 16:
+      m = 6 + (3 * x) + ((Math.floor(x / 4) * 2));
+      n = 5 + (y) + ((Math.floor(y / 4) * 3));
+      break;
+  }
+  gfxPos.push(m, n);
+  return gfxPos;
+}
+*/

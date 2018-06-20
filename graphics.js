@@ -1,16 +1,4 @@
 const ctx = require('axel');
-let term = require('terminal-kit').terminal;
-
-const cellPositions = [
-  [12, 7], [16, 7], [20, 7], [27, 7], [31, 7], [35, 7], [42, 7], [46, 7], [50, 7],
-  [12, 9], [16, 9], [20, 9], [27, 9], [31, 9], [35, 9], [42, 9], [46, 9], [50, 9],
-  [12, 11], [16, 11], [20, 11], [27, 11], [31, 11], [35, 11], [42, 11], [46, 11], [50, 11],
-  [12, 15], [16, 15], [20, 15], [27, 15], [31, 15], [35, 15], [42, 15], [46, 15], [50, 15],
-  [12, 17], [16, 17], [20, 17], [27, 17], [31, 17], [35, 17], [42, 17], [46, 17], [50, 17],
-  [12, 19], [16, 19], [20, 19], [27, 19], [31, 19], [35, 19], [42, 19], [46, 19], [50, 19],
-  [12, 23], [16, 23], [20, 23], [27, 23], [31, 23], [35, 23], [42, 23], [46, 23], [50, 23],
-  [12, 25], [16, 25], [20, 25], [27, 25], [31, 25], [35, 25], [42, 25], [46, 25], [50, 25],
-  [12, 27], [16, 27], [20, 27], [27, 27], [31, 27], [35, 27], [42, 27], [46, 27], [50, 27]];
 
 const gfx = {
   drawInterface: () => {
@@ -166,8 +154,8 @@ const gfx = {
     ctx.bg(102, 102, 102);
     for (let j = 0; j < gameBoard.length; j++) {
       for (let i = 0; i < gameBoard.length; i++) {
-        let m = calcPosition(i, j, gameBoard.length)[0];
-        let n = calcPosition(i, j, gameBoard.length)[1];
+        let m = gfx.calcPosition(i, j, gameBoard.length)[0];
+        let n = gfx.calcPosition(i, j, gameBoard.length)[1];
         switch (gameBoard.length) {
           case 4:
             ctx.box(m - 1, n, 3, 1);
@@ -191,13 +179,11 @@ const gfx = {
   },
 
   drawCursor: (menuIndex, cursorState, gameBoard) => {
-    let x = calcPosition(cursorState[0], cursorState[1], gameBoard.length)[0];
-    let y = calcPosition(cursorState[0], cursorState[1], gameBoard.length)[1];
+    let x = gfx.calcPosition(cursorState[0], cursorState[1], gameBoard.length)[0];
+    let y = gfx.calcPosition(cursorState[0], cursorState[1], gameBoard.length)[1];
     ctx.bg(204, 153, 0);
     ctx.fg(255, 0, 0);
     let value = gameBoard[cursorState[0]][cursorState[1]].toString();
-    console.log('gfxPos= ' + x + ',' + y);
-    console.log('value= ' + value);
     switch (menuIndex[0]) {
       case 1:
         ctx.box(x - 2, y, 5, 1);
@@ -214,6 +200,28 @@ const gfx = {
         break;
     }
     ctx.cursor.restore();
+  },
+
+  calcPosition: (x, y, tableLength) => {
+    let m = 0;
+    let n = 0;
+    let gfxPos = [];
+    switch (tableLength) {
+      case 4:
+        m = 18 + (7 * x) + ((Math.floor(x / 2) * 6));
+        n = 10 + (3 * y) + ((Math.floor(y / 2) * 4));
+        break;
+      case 9: // ok
+        m = 12 + (4 * x) + ((Math.floor(x / 3) * 3));
+        n = 7 + (2 * y) + ((Math.floor(y / 3) * 2));
+        break;
+      case 16:
+        m = 6 + (3 * x) + ((Math.floor(x / 4) * 2));
+        n = 5 + (y) + ((Math.floor(y / 4) * 3));
+        break;
+    }
+    gfxPos.push(m, n);
+    return gfxPos;
   }
 
 };
@@ -228,26 +236,4 @@ function highlight (state) {
     ctx.bg(255, 153, 0);
     ctx.fg(0, 0, 0);
   }
-}
-
-function calcPosition (x, y, tableLength) {
-  let m = 0;
-  let n = 0;
-  let gfxPos = [];
-  switch (tableLength) {
-    case 4:
-      m = 18 + (7 * x) + ((Math.floor(x / 2) * 6));
-      n = 10 + (3 * y) + ((Math.floor(y / 2) * 4));
-      break;
-    case 9: // ok
-      m = 12 + (4 * x) + ((Math.floor(x / 3) * 3));
-      n = 7 + (2 * y) + ((Math.floor(y / 3) * 2));
-      break;
-    case 16:
-      m = 6 + (3 * x) + ((Math.floor(x / 4) * 2));
-      n = 5 + (y) + ((Math.floor(y / 4) * 3));
-      break;
-  }
-  gfxPos.push(m, n);
-  return gfxPos;
 }

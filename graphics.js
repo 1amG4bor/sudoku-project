@@ -12,7 +12,12 @@ const gfx = {
     ctx.box(63, 21, 19, 10);
   },
 
-  drawMenu: (level, time, remainedCell, rec) => {
+  drawMenu: (menuIndex, timer, remainedCell, rec) => {
+    let level = 'N/A';
+    let time = calculateTime(timer);
+    if (menuIndex[1] === 0) level = 'easy';
+    else if (menuIndex[1] === 1) level = 'medium';
+    else if (menuIndex[1] === 2) level = 'hard';
     // game menu
     ctx.fg(255, 204, 0);
     ctx.text(64, 22, 'Level: ');
@@ -236,4 +241,14 @@ function highlight (state) {
     ctx.bg(255, 153, 0);
     ctx.fg(0, 0, 0);
   }
+}
+
+function calculateTime (second) {
+  let time;
+  let min, sec;
+  min = Math.floor(second / 60);
+  sec = second - (min * 60);
+  if (sec < 10) time = min + ':0' + sec;
+  else time = min + ':' + sec;
+  return time;
 }

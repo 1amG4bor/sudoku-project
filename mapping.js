@@ -23,6 +23,9 @@ const mapping = {
         boardProperies.sectionY = 4;
         break;
     }
+    //
+    // easy
+    //
     return boardProperies;
   },
 
@@ -31,40 +34,57 @@ const mapping = {
     let board = [];
     for (let i = 0; i < setting.ySize; i++) {
       board[i] = [];
-      for (let j = 0; j < setting.xSize; j++) board[i][j] = 0;
+      for (let j = 0; j < setting.xSize; j++) board[i][j] = null;
     }
-
-    let backtrackX = false;
-    let backtrackY = false;
-    let outerLaps;
-    let temp;
-    for (let x = 0; x < setting.xSize; x++) {
-      backtrackY = false;
-      outerLaps = 0;
-      for (let y = 0; y < setting.ySize; y++) {
-        backtrackX = false;
-        let laps = 0;
-        temp = mapping.validate(setting, board, x, y, laps, outerLaps, backtrackX, backtrackY);
-        if (!backtrackX) {
-          board[x][y] = temp;
-        } else mapping.backtracking(setting, board, x, y, outerLaps, backtrackY);
+    let backtrack = { 'x': false, 'y': false };
+    let laps = { 'inner': 0, 'outer': 0 };
+    let temp; // ?
+    for (let y = 0; y < setting.ySize; y++) {
+      backtrack.y = false;
+      laps.outer = 0;
+      for (let x = 0; x < setting.xSize; x++) {
+        backtrack.x = false;
+        laps.inner = 0;
+        // mapping.addNewCell(setting, board, y, x, backtrack, laps);
+        temp = mapping.validate(setting, board, y, x, laps, laps, backtrack);
+        if (!backtrack.x) {
+          board[y][x] = temp;
+        } else mapping.backtracking(setting, board, y, x, laps, backtrack);
       }
     }
     return board;
   },
 
-  validate: (setting, board, x, y, laps, outerLaps, backtrackX, backtrackY) => {
+  addNewCell: (setting, board, y, x, backtrack, laps) => {
+    let possibleValues = [];
+    for (let i = 1; i < setting.xSize + 1; i++) possibleValues.push(i);
+    let valid = false;
+    while (!valid) {
+      laps.inner++;
+      board[y][x] = possibleValues.splice(mapping.getRandomInt(possibleValues.length) - 1, 1);
+      if (y === 0 && x === 0) valid = true;
+      else if (mapping.checkBoard(y, x, temp, setting, board)) valid = true;
+
+      if (laps.inner > Math.pow(setting.xSize, 2)) {
+        backtrack.x = true;
+        if (laps.outer > 10) backtrack.y = true;
+        break;
+      }
+    }
+  },
+
+  validate: (setting, board, y, x, laps, backtrack) => {
     let valid = false;
     let temp;
     while (!valid) {
-      laps++;
+      laps.inner++;
       temp = mapping.getRandomInt(setting.xSize);
       if (y === 0 && x === 0) valid = true;
-      else if (mapping.checkBoard(x, y, temp, setting, board)) valid = true;
-      if (laps > setting.xSize * setting.ySize) {
-        backtrackX = true;
-        if (outerLaps > 10) {
-          backtrackY = true;
+      else if (mapping.checkBoard(y, x, temp, setting, board)) valid = true;
+      if (laps.inner > setting.xSize * setting.ySize) {
+        backtrack.x = true;
+        if (laps.outer > 10) {
+          backtrack.y = true;
         }
         break;
       }
@@ -72,45 +92,49 @@ const mapping = {
     return temp;
   },
 
+  // Checking the board
+  checkBoard: (y, x, temp, setting, board) => {
+    // Horizontal checking...
+    for (let i = 0; i < x; i++) {
+      if (board[y][i] === temp) return false;
+    }
+    // Vertical checking...
+    for (let j = 0; j < y; j++) {
+      if (board[j][x] === temp) return false;
+    }
+    // Area checking...
+    for (let k = 0; k < setting.ySize; k++) {
+      for (let l = 0; l < setting.xSize; l++) {
+        if ((Math.floor(k / setting.sectionY) === Math.floor(y / setting.sectionY)) && (Math.floor(l / setting.sectionX) === Math.floor(x / setting.sectionX))) {
+          if (board[k][l] === temp) return false;
+        }
+      }
+    }
+    return true;
+  },
+
   // Do backtracking if dead-end happens
-  backtracking: (setting, board, x, y, outerLaps, backtrackY) => {
-    for (let i = 0; i < setting.xSize; i++) board[x][i] = 0;
+  backtracking: (setting, board, y, x, laps, backtrack) => {
+    for (let i = 0; i < setting.xSize; i++) board[y][i] = 0;
     y = -1;
-    outerLaps++;
-    if (backtrackY) {
-      for (let j = x; j > x - 2; j--) {
+    laps.outer++;
+    if (backtrack.y) {
+      for (let j = y; j > y - 2; j--) {
         for (let i = 0; i < setting.xSize; i++) board[j][i] = 0;
       }
-      x -= 2;
+      y -= 2;
     }
   },
 
   // Generate random number based on the board size
   getRandomInt: (max) => {
     return Math.floor(Math.random() * Math.floor(max)) + 1;
-  },
-
-  // Checking the board
-  checkBoard: (x, y, temp, setting, board) => {
-    // Horizontal checking...
-    for (let i = 0; i < y; i++) {
-      if (board[x][i] === temp) return false;
-    }
-    // Vertical checking...
-    for (let j = 0; j < x; j++) {
-      if (board[j][y] === temp) return false;
-    }
-    // Area checking...
-    for (let k = 0; k < setting.xSize; k++) {
-      for (let l = 0; l < setting.ySize; l++) {
-        if ((Math.floor(k / setting.sectionY) === Math.floor(x / setting.sectionY)) && (Math.floor(l / setting.sectionX) === Math.floor(y / setting.sectionX))) {
-          if (board[k][l] === temp) return false;
-        }
-      }
-    }
-    return true;
   }
 
 };
 
 module.exports = mapping;
+
+const getBoard = (x, y, board) => {
+  return board[y][x];
+};

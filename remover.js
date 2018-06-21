@@ -1,4 +1,5 @@
 const solvingMethod = require('./solutionChecker.js');
+let term = require('terminal-kit').terminal;
 const remover = {
   generateEmptyBoard: (size) => {
     const emptyBoard = [];
@@ -14,6 +15,7 @@ const remover = {
   /*
   const emptySudokuBoard = generateEmptyBoard(9);
   const sudokuBoard = solvingMethod.generateBoard(emptySudokuBoard, solvingMethod.findEmptyValue(emptySudokuBoard));
+  const clonedSudokuBoard = solvingMethod.clone(sudokuBoard);
   */
 
   collectCoordinates: (board) => {
@@ -30,8 +32,9 @@ const remover = {
     return solvingMethod.calculateNumberOfSolutions(solvingMethod.clone(board), solvingMethod.findEmptyValue(board));
   },
 
-  cellRemover: (board, coordinates, removedNumbers) => {
-    if (removedNumbers === 54) {
+  cellRemover: (board, coordinates, removedNumbers, limit) => {
+    term.black.moveTo(1, 1, '-' + removedNumbers + 'cell');
+    if (removedNumbers === parseInt(limit)) {
       return true;
     }
 
@@ -45,7 +48,7 @@ const remover = {
       const numberOfSolutions = remover.getNumberOfSolutions(board);
       if (numberOfSolutions === 1) {
         coordinates.splice(i, 1);
-        const finished = remover.cellRemover(board, coordinates, removedNumbers + 1);
+        const finished = remover.cellRemover(board, coordinates, removedNumbers + 1, limit);
         if (finished) {
           return true;
         }
@@ -54,9 +57,28 @@ const remover = {
       board[randomCell.y][randomCell.x] = originalValue;
     }
     return false;
+  },
+
+  checkSolutionCorrect: (board, clonedBoard) => {
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board.length; j++) {
+        if (board[i][j] !== clonedBoard[i][j]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 };
 
 module.exports = remover;
 
-// cellRemover(sudokuBoard, collectCoordinates(sudokuBoard), 0);
+/*
+cellRemover(sudokuBoard, collectCoordinates(sudokuBoard), 0);
+checkSolutionCorrect(sudokuBoard, clonedSudokuBoard);
+if (checkSolutionCorrect) {
+  console.log('Congratulations! You solved the puzzle!');
+} else {
+  console.log(Sorry. You couldn't solve the puzzle. Try again!');
+}
+*/

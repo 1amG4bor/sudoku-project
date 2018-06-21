@@ -13,11 +13,11 @@ term.windowTitle('S u d o k u \t\t v-0.0.1 \t\t\t\t\t by: FlowAcademy\'s student
 // declaration
 let board = [];
 let fixed;
-let timer = 0;
+let clock = 0;
 const defineCellNums = [
-  [4, 8, 10],     //  2*2 -> 16
+  [6, 9, 12],     //  2*2 -> 16
   [44, 50, 56],   //  3*3 -> 81
-  [60, 100, 130]  //  4*4 -> 256
+  [60, 90, 120]   //  4*4 -> 256
 ];
 
 let gameState = 'inTypeMenu';
@@ -27,7 +27,7 @@ let userInput = '';
 
 let pressedKey = null;
 let startCycle = Date.now();
-
+let isPlay = false;
 //      >>>   MAIN THREAD (event handler)   <<<
 term.grabInput();
 term.on('key', function (key) {
@@ -59,7 +59,7 @@ term.on('key', function (key) {
             makeBoard(menuIndex);
             cursorState[0] = 0;
             cursorState[1] = 0;
-            // startClock();
+            startClock(isPlay = true);
           }
           break;
         case 'ESCAPE':
@@ -86,10 +86,13 @@ term.on('key', function (key) {
           gameState = 'editMode';
           break;
         case 'ESCAPE':
+          isPlay = false;
           gameState = 'inTypeMenu';
+          // gameState = 'inGameMenu'
           break;
         case 'C':
-
+        case 'c':
+          board[cursorState[0]][cursorState[1]] = '';
           break;
         case 'H':
 
@@ -104,6 +107,7 @@ term.on('key', function (key) {
           board[cursorState[0]][cursorState[1]] = userInput;
           userInput = '';
           gameState = 'inGame';
+          //GFX.drawChoosePanel();
           break;
         case 'ESCAPE':
           userInput = '';
@@ -132,13 +136,20 @@ term.on('key', function (key) {
 
 // Timer
 const startClock = () => {
-  setInterval(setTime, 1000);
+  clock = 0;
+  setInterval(function (isPlay) {
+    clock++;
+    ctx.bg(255, 204, 0);
+    ctx.fg(0, 0, 0);
+    ctx.text(71, 18, calculateTime(clock));
+  }, 1000);
 };
+/*
 const setTime = () => {
   timer++;
   reDraw(gameState, menuIndex, cursorState);
 };
-
+*/
 // Make board
 const makeBoard = (menuIndex) => {
   let boardSize;
@@ -182,13 +193,12 @@ const reDraw = (menu, index, cursor) => {
       break;
     case 'inGame':
       GFX.drawGameBoard(board, fixed);
-      // GFX.drawChoosePanel();
       break;
   }
   GFX.drawInfoBar();
   // GFX.drawMenu('med', '0:00', '45', '0:42');
   if (menu === 'inGame') {
-    GFX.drawMenu(menuIndex[1], timer, '?', 'N/A');
+    GFX.drawMenu(menuIndex[1], clock, '?', 'N/A');
     GFX.drawCursor(index, cursor, board);
   }
   // term.moveTo(1, 1, pressedKey + ' was pressed, >menuindex= ' + menuIndex + ' >cursorState= ' + cursorState);
@@ -202,6 +212,16 @@ const modifyCell = (board, cursorState, pressedKey, key) => {
   term.moveTo(currentPos[0], currentPos[1]);
   term.setCursorColorRgb(255, 0, 0).red(pressedKey);
   term.moveTo(currentPos[0], currentPos[1]);
+};
+
+const calculateTime = (fullSec) => {
+  let time;
+  let min, sec;
+  min = Math.floor(fullSec / 60);
+  sec = fullSec - (min * 60);
+  if (sec < 10) time = min + ':0' + sec;
+  else time = min + ':' + sec;
+  return time;
 };
 
 // Load the game

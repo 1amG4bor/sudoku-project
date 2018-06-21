@@ -119,13 +119,13 @@ const gfx = {
 
   drawGameBoard: (gameBoard, fixed) => {
     // Mini logo
-    /*
+    
     ctx.bg(0, 153, 153);
     ctx.box(12, 2, 40, 2);
     ctx.fg(255, 204, 0);
     ctx.bg(153, 0, 0);
     ctx.text(18, 2, '   S   U   D   O   K   U   ');
-    */
+    
     // >>> MainBoard <<<
     // Grid
     switch (gameBoard.length) {

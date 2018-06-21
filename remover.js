@@ -59,6 +59,8 @@ const remover = {
     return false;
   },
 
+  // Player solves the puzzle.
+
   checkSolutionCorrect: (board, clonedBoard) => {
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board.length; j++) {
@@ -68,6 +70,18 @@ const remover = {
       }
     }
     return true;
+  },
+
+  freeCellCounter: (board) => {
+    let freeCells = 0;
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board.length; j++) {
+        if (board[i][j] === ' ') {
+          freeCells++;
+        }
+      }
+    }
+    return freeCells;
   }
 };
 

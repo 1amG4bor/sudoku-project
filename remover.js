@@ -15,6 +15,7 @@ const remover = {
   /*
   const emptySudokuBoard = generateEmptyBoard(9);
   const sudokuBoard = solvingMethod.generateBoard(emptySudokuBoard, solvingMethod.findEmptyValue(emptySudokuBoard));
+  const clonedSudokuBoard = solvingMethod.clone(sudokuBoard);
   */
 
   collectCoordinates: (board) => {
@@ -56,9 +57,28 @@ const remover = {
       board[randomCell.y][randomCell.x] = originalValue;
     }
     return false;
+  },
+
+  checkSolutionCorrect: (board, clonedBoard) => {
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board.length; j++) {
+        if (board[i][j] !== clonedBoard[i][j]) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 };
 
 module.exports = remover;
 
-// cellRemover(sudokuBoard, collectCoordinates(sudokuBoard), 0);
+/*
+cellRemover(sudokuBoard, collectCoordinates(sudokuBoard), 0);
+checkSolutionCorrect(sudokuBoard, clonedSudokuBoard);
+if (checkSolutionCorrect) {
+  console.log('Congratulations! You solved the puzzle!');
+} else {
+  console.log(Sorry. You couldn't solve the puzzle. Try again!');
+}
+*/

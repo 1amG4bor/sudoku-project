@@ -33,7 +33,6 @@ const remover = {
   },
 
   cellRemover: (board, coordinates, removedNumbers, limit) => {
-    term.black.moveTo(1, 1, '-' + removedNumbers + 'cell');
     if (removedNumbers === parseInt(limit)) {
       return true;
     }
@@ -62,7 +61,7 @@ const remover = {
   checkSolutionCorrect: (board, clonedBoard) => {
     for (let i = 0; i < board.length; i++) {
       for (let j = 0; j < board.length; j++) {
-        if (board[i][j] !== clonedBoard[i][j]) {
+        if (board[i][j] != clonedBoard[i][j]) {
           return false;
         }
       }
@@ -80,7 +79,6 @@ const remover = {
       }
     }
     return freeCells;
-
   }
 };
 

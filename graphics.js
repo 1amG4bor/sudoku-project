@@ -1,4 +1,5 @@
 const ctx = require('axel');
+const term = require('terminal-kit').terminal;
 
 const gfx = {
   drawInterface: () => {
@@ -190,26 +191,24 @@ const gfx = {
         let n = gfx.calcPosition(i, j, gameBoard.length)[1];
         let sectionX = Math.floor(i / Math.sqrt(gameBoard.length));
         let sectiony = Math.floor(j / Math.sqrt(gameBoard.length));
-        if ((sectionX + sectiony) % 2 === 0) ctx.bg(102, 102, 102);
+        if (fixed[i][j] !== null) ctx.bg(0, 0, 0);
+        else if ((sectionX + sectiony) % 2 === 0) ctx.bg(102, 102, 102);
         else (ctx.bg(51, 51, 51));
         ctx.fg(0, 0, 0);
         switch (gameBoard.length) {
           case 4:
             ctx.box(m - 1, n, 3, 1);
-            if (gameBoard[i][j].toString() !== '') ctx.text(m, n, gameBoard[i][j].toString());
             break;
           case 9: // ok
             ctx.box(m - 1, n, 3, 1);
-            if (gameBoard[i][j].toString() !== '') ctx.text(m, n, gameBoard[i][j].toString());
             break;
           case 16:
+            if (parseInt(gameBoard[i][j]) < 10) m++;
             ctx.box(m, n, 2, 1);
-            if (gameBoard[i][j].toString() !== '') {
-              if (parseInt(gameBoard[i][j]) < 10) ctx.text(m + 1, n, gameBoard[i][j].toString());
-              else ctx.text(m, n, gameBoard[i][j].toString());
-            }
             break;
         }
+        if (fixed[i][j] !== null) term.red.bold.moveTo(m, n, gameBoard[i][j].toString());
+        else term.green.moveTo(m, n, gameBoard[i][j].toString());
       }
     }
     // fix cells
@@ -283,26 +282,3 @@ function calculateTime (second) {
   else time = min + ':' + sec;
   return time;
 }
-/*
-calcPosition: (x, y, tableLength) => {
-  let m = 0;
-  let n = 0;
-  let gfxPos = [];
-  switch (tableLength) {
-    case 4:
-      m = 18 + (7 * x) + ((Math.floor(x / 2) * 6));
-      n = 10 + (3 * y) + ((Math.floor(y / 2) * 4));
-      break;
-    case 9: // ok
-      m = 12 + (4 * x) + ((Math.floor(x / 3) * 3));
-      n = 7 + (2 * y) + ((Math.floor(y / 3) * 2));
-      break;
-    case 16:
-      m = 6 + (3 * x) + ((Math.floor(x / 4) * 2));
-      n = 5 + (y) + ((Math.floor(y / 4) * 3));
-      break;
-  }
-  gfxPos.push(m, n);
-  return gfxPos;
-}
-*/

@@ -4,7 +4,7 @@
 let ctx = require('axel');
 let term = require('terminal-kit').terminal;
 // OwnPackeges
-const mapping = require('./mapping');
+// const mapping = require('./mapping');
 const GFX = require('./graphics');
 const solvingMethod = require('./solutionChecker');
 const remover = require('./remover');
@@ -14,110 +14,123 @@ term.windowTitle('S u d o k u \t\t v-0.0.1 \t\t\t\t\t by: FlowAcademy\'s student
 let board = [];
 let fixed;
 let timer = 0;
+const defineCellNums = [
+  [4, 8, 10],     //  2*2 -> 16
+  [44, 50, 56],   //  3*3 -> 81
+  [60, 100, 130]  //  4*4 -> 256
+];
 
-let pressedKey = null;
 let gameState = 'inTypeMenu';
 let menuIndex = [2, 2];
 let cursorState = [0, 0];
 let userInput = '';
-// FUNCTIONS
+
+let pressedKey = null;
+let startCycle = Date.now();
+
+//      >>>   MAIN THREAD (event handler)   <<<
 term.grabInput();
 term.on('key', function (key) {
   if (key === 'CTRL_C') { process.exit(); } // Detect CTRL-C and exit 'manually'
-  if (gameState === 'inTypeMenu' || gameState === 'inLevelMenu') {
-    // Navigate and make settings in menu!
-    switch (key) {
-      case 'UP':
-        if (gameState === 'inTypeMenu') {
-          if (menuIndex[0] > 1) menuIndex[0]--;
-        } else {
-          if (menuIndex[1] > 1) menuIndex[1]--;
-        }
-        break;
-      case 'DOWN':
-        if (gameState === 'inTypeMenu') {
-          if (menuIndex[0] < 3) menuIndex[0]++;
-        } else {
-          if (menuIndex[1] < 3) menuIndex[1]++;
-        }
-        break;
-      case 'ENTER':
-        if (gameState === 'inTypeMenu') gameState = 'inLevelMenu';
-        else {
+  if ((pressedKey !== key) || (key === pressedKey && Date.now() > startCycle + 100)) {
+    startCycle = Date.now();
+    pressedKey = key;
+    if (gameState === 'inTypeMenu' || gameState === 'inLevelMenu') {
+      // Navigate and make settings in menu!
+      switch (key) {
+        case 'UP':
+          if (gameState === 'inTypeMenu') {
+            if (menuIndex[0] > 1) menuIndex[0]--;
+          } else {
+            if (menuIndex[1] > 1) menuIndex[1]--;
+          }
+          break;
+        case 'DOWN':
+          if (gameState === 'inTypeMenu') {
+            if (menuIndex[0] < 3) menuIndex[0]++;
+          } else {
+            if (menuIndex[1] < 3) menuIndex[1]++;
+          }
+          break;
+        case 'ENTER':
+          if (gameState === 'inTypeMenu') gameState = 'inLevelMenu';
+          else {
+            gameState = 'inGame';
+            makeBoard(menuIndex);
+            cursorState[0] = 0;
+            cursorState[1] = 0;
+            // startClock();
+          }
+          break;
+        case 'ESCAPE':
+          if (gameState === 'inLevelMenu') gameState = 'inTypeMenu';
+          break;
+      }
+    } else if (gameState === 'inGame') {
+      // Navigate and play on game board!
+      let end = board.length - 1;
+      switch (key) {
+        case 'UP':
+          if (cursorState[1] > 0) cursorState[1]--;
+          break;
+        case 'DOWN':
+          if (cursorState[1] < end) cursorState[1]++;
+          break;
+        case 'LEFT':
+          if (cursorState[0] > 0) cursorState[0]--;
+          break;
+        case 'RIGHT':
+          if (cursorState[0] < end) cursorState[0]++;
+          break;
+        case 'ENTER':
+          gameState = 'editMode';
+          break;
+        case 'ESCAPE':
+          gameState = 'inTypeMenu';
+          break;
+        case 'C':
+
+          break;
+        case 'H':
+
+          break;
+        case 'R':
+
+          break;
+      }
+    } else if (gameState === 'editMode') {
+      switch (key) {
+        case 'ENTER':
+          board[cursorState[0]][cursorState[1]] = userInput;
+          userInput = '';
           gameState = 'inGame';
-          makeBoard(menuIndex);
-          cursorState[0] = 0;
-          cursorState[1] = 0;
-          startClock();
-        }
-        break;
-      case 'ESCAPE':
-        if (gameState === 'inLevelMenu') gameState = 'inTypeMenu';
-        break;
+          break;
+        case 'ESCAPE':
+          userInput = '';
+          gameState = 'inGame';
+          break;
+        default:
+          // term.moveTo(20, 31, 'k> ' + key);
+          // term.moveTo(25, 31, 'c> ' + key.charCodeAt(0));
+          if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
+            pressedKey = key;
+            let limit = 1;
+            if (board.length > 9) limit = 2;
+            if (userInput.length < limit) userInput += key;
+            else userInput = userInput.slice(userInput.length - 1) + key;
+          }
+          break;
+      }
     }
-  } else if (gameState === 'inGame') {
-    // Navigate and play on game board!
-    let end = board.length - 1;
-    switch (key) {
-      case 'UP':
-        if (cursorState[1] > 0) cursorState[1]--;
-        break;
-      case 'DOWN':
-        if (cursorState[1] < end) cursorState[1]++;
-        break;
-      case 'LEFT':
-        if (cursorState[0] > 0) cursorState[0]--;
-        break;
-      case 'RIGHT':
-        if (cursorState[0] < end) cursorState[0]++;
-        break;
-      case 'ENTER':
-        gameState = 'editMode';
-        break;
-      case 'ESCAPE':
-        gameState = 'inTypeMenu';
-        break;
-      case 'C':
-
-        break;
-      case 'H':
-
-        break;
-      case 'R':
-
-        break;
-    }
-  } else if (gameState === 'editMode') {
-    switch (key) {
-      case 'ENTER':
-        board[cursorState[0]][cursorState[1]] = userInput;
-        userInput = '';
-        gameState = 'inGame';
-        break;
-      case 'ESCAPE':
-        userInput = '';
-        gameState = 'inGame';
-        break;
-      default:
-        // term.moveTo(20, 31, 'k> ' + key);
-        // term.moveTo(25, 31, 'c> ' + key.charCodeAt(0));
-        if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
-          pressedKey = key;
-          let limit = 1;
-          if (board.length > 9) limit = 2;
-          if (userInput.length < limit) userInput += key;
-          else userInput = userInput.slice(userInput.length - 1) + key;
-        }
-        break;
-    }
+    // pressedKey = key; // THIS line WILL BE DELETED!
+    if (gameState !== 'editMode') reDraw(gameState, menuIndex, cursorState);
+    else modifyCell(board, cursorState, pressedKey, key);
   }
-  // pressedKey = key; // THIS line WILL BE DELETED!
-  if (gameState !== 'editMode') reDraw(gameState, menuIndex, cursorState);
-  else modifyCell(board, cursorState, pressedKey, key);
 });
 
-// Timer
+//      >>>   FUNCTIONS   <<<
 
+// Timer
 const startClock = () => {
   setInterval(setTime, 1000);
 };
@@ -132,14 +145,11 @@ const makeBoard = (menuIndex) => {
   if (menuIndex[0] === 1) boardSize = 4;
   else if (menuIndex[0] === 2) boardSize = 9;
   else if (menuIndex[0] === 3) boardSize = 16;
-  let setting = mapping.setBoard(boardSize);
+  // let setting = mapping.setBoard(boardSize);
   board = remover.generateEmptyBoard(boardSize);
   board = solvingMethod.generateBoard(board, solvingMethod.findEmptyValue(board));
-  console.log(board);
   fixed = readFixNums(board);
-  remover.cellRemover(board, remover.collectCoordinates(board), 0);
-  // need to set numbers for difficulty level
-  // console.log(fixed);
+  remover.cellRemover(board, remover.collectCoordinates(board), 0, (defineCellNums[menuIndex[0] - 1][menuIndex[1] - 1]));
 };
 
 const readFixNums = (gameBoard) => {
@@ -182,7 +192,7 @@ const reDraw = (menu, index, cursor) => {
     GFX.drawCursor(index, cursor, board);
   }
   // term.moveTo(1, 1, pressedKey + ' was pressed, >menuindex= ' + menuIndex + ' >cursorState= ' + cursorState);
-  // term.moveTo(1, 31, '> ' + gameState);
+  //term.moveTo(1, 24, '> ' + defineCellNums[menuIndex[0] - 1][menuIndex[1] - 1]);
   ctx.cursor.restore();
 };
 

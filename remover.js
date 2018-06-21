@@ -1,4 +1,5 @@
 const solvingMethod = require('./solutionChecker.js');
+let term = require('terminal-kit').terminal;
 const remover = {
   generateEmptyBoard: (size) => {
     const emptyBoard = [];
@@ -30,8 +31,9 @@ const remover = {
     return solvingMethod.calculateNumberOfSolutions(solvingMethod.clone(board), solvingMethod.findEmptyValue(board));
   },
 
-  cellRemover: (board, coordinates, removedNumbers) => {
-    if (removedNumbers === 54) {
+  cellRemover: (board, coordinates, removedNumbers, limit) => {
+    term.black.moveTo(1, 1, '-' + removedNumbers + 'cell');
+    if (removedNumbers === parseInt(limit)) {
       return true;
     }
 
@@ -45,7 +47,7 @@ const remover = {
       const numberOfSolutions = remover.getNumberOfSolutions(board);
       if (numberOfSolutions === 1) {
         coordinates.splice(i, 1);
-        const finished = remover.cellRemover(board, coordinates, removedNumbers + 1);
+        const finished = remover.cellRemover(board, coordinates, removedNumbers + 1, limit);
         if (finished) {
           return true;
         }

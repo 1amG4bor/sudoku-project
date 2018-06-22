@@ -33,10 +33,14 @@ let userStat = ['', '', '', 'n/a'];
 let pressedKey = null;
 let startCycle = Date.now();
 let isPlay = false;
+let isExit = false;
 //      >>>   MAIN THREAD (event handler)   <<<
 term.grabInput();
 term.on('key', function (key) {
-  if (key === 'CTRL_C') { process.exit(); } // Detect CTRL-C and exit 'manually'
+  if (key === 'CTRL_C') {
+    term.hideCursor(false);
+    process.exit();
+  } // Detect CTRL-C and exit 'manually'
   if ((pressedKey !== key) || (key === pressedKey && Date.now() > startCycle + 100)) {
     startCycle = Date.now();
     pressedKey = key;
@@ -62,13 +66,30 @@ term.on('key', function (key) {
           else {
             gameState = 'inGame';
             makeBoard(menuIndex);
-            cursorState[0] = 2;
+            cursorState[0] = 0;
             cursorState[1] = 0;
             startClock(isPlay = true);
           }
           break;
         case 'ESCAPE':
           if (gameState === 'inLevelMenu') gameState = 'inTypeMenu';
+          if (gameState === 'inTypeMenu') gameState = 'exitMenu';
+          break;
+      }
+    } else if (gameState === 'exitMenu') {
+      switch (key) {
+        case 'LEFT':
+          isExit = true;
+          break;
+        case 'RIGHT':
+          isExit = false;
+          break;
+        case 'ENTER':
+          if (isExit) {
+            term.clear();
+            term.hideCursor(false);
+            process.exit();
+          } else gameState = 'inTypeMenu';
           break;
       }
     } else if (gameState === 'inGame') {
@@ -134,8 +155,9 @@ term.on('key', function (key) {
           break;
       }
     }
-    if (gameState !== 'editMode') reDraw(gameState, menuIndex, cursorState);
-    else modifyCell(board, cursorState, userInput);
+    // rendering...
+    if (gameState === 'editMode') modifyCell();
+    else reDraw();
   }
 });
 
@@ -166,38 +188,43 @@ const makeBoard = (menuIndex) => {
   userStat[2] = remover.freeCellCounter(board).toString();
 };
 
-const reDraw = (menu, index, cursor) => {
+const reDraw = () => {
   console.log('\x1Bc');
   term.hideCursor();
   GFX.drawInterface();
-  switch (menu) {
+  switch (gameState) {
     case 'inTypeMenu':
       GFX.drawLogo(12, 5);
       GFX.drawChoosePanel();
-      GFX.printGametype(index[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
+      GFX.printGametype(cursorState[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
       break;
     case 'inLevelMenu':
       GFX.drawLogo(12, 5);
       GFX.drawChoosePanel();
-      GFX.printLevel(index[1]); // options: 1-'easy', 2-'med', 3-'hard'
+      GFX.printLevel(cursorState[1]); // options: 1-'easy', 2-'med', 3-'hard'
+      break;
+    case 'exitMenu':
+      GFX.drawLogo(12, 5);
+      GFX.drawChoosePanel();
+      GFX.printGametype(cursorState[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
+      GFX.exitQuestion(isExit);
       break;
     case 'inGame':
       GFX.drawGameBoard(board, fixed);
       break;
   }
   GFX.drawInfoBar();
-  if (menu === 'inGame') {
+  if (gameState === 'inGame') {
     GFX.drawMenu(menuIndex[1], clock, userStat[2], userStat[3]);
-    GFX.drawCursor(index, cursor, board);
+    GFX.drawCursor(menuIndex, cursorState, board);
   }
-  term.moveTo(3, 28, 'board> ' + board);
-  term.moveTo(1, 29, 'C-board> ' + clonedBoard);
-  term.moveTo(3, 30, 'fixed> ' + fixed);
+  // term.moveTo(3, 28, 'board> ' + board);
+  // term.moveTo(1, 29, 'C-board> ' + clonedBoard);
+  // term.moveTo(3, 30, 'fixed> ' + fixed);
   if ((isPlay === false && userStat[2] === '0') && (gameState !== 'inTypeMenu' && gameState !== 'inLevelMenu')) winning();
-  ctx.cursor.restore();
 };
 
-const modifyCell = (board, cursorState, userInput) => {
+const modifyCell = () => {
   let currentPos = GFX.calcPosition(cursorState[0], cursorState[1], board.length);
   term.moveTo(currentPos[0], currentPos[1]);
   term.setCursorColorRgb(255, 0, 0).red(userInput);

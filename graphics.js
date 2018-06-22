@@ -107,102 +107,6 @@ const gfx = {
       'Remained: ') ;
       commands.draw() ;
 
-/*
-    term.clear();
-    let background = termkit.ScreenBufferHD.create({ dst: term, width: 80, height: 24 });
-    background.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-    background.draw();
-
-    let frame = termkit.ScreenBufferHD.create({ dst: term, width: 80, height: 1 });
-    frame.fill({ attr: { bgR: 0, bgG: 153, bgB: 153, bgA: 125 } });
-    frame.x = 1;
-    frame.y = 1;
-    frame.draw();
-    frame.x = 1;
-    frame.y = 24;
-    frame.draw();
-
-    let frame2 = termkit.ScreenBufferHD.create({ dst: term, width: 1, height: 22 })
-    frame2.fill({ attr: { bgR: 0, bgG: 153, bgB: 153, bgA: 125 } });
-    frame2.x = 1;
-    frame2.y = 2;
-    frame2.draw();
-
-    frame2.x = 80;
-    frame2.y = 2;
-    frame2.draw();
-
-    frame2.x = 57;
-    frame2.y = 2;
-    frame2.draw();
-
-    let frame3 = termkit.ScreenBufferHD.create({ dst: term, width: 23, height: 1 });
-    frame3.fill({ attr: { bgR: 0, bgG: 153, bgB: 153, bgA: 125 } });
-    frame3.x = 57;
-    frame3.y = 16;
-    frame3.draw();
-
-
-
-    let commands = termkit.ScreenBuffer.create({ dst: term });
-
-    commands.put({
-      x: 62, y: 1, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, 'Command list:');
-    commands.draw();
-
-    commands.put({
-      x: 64, y: 3, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, '⇧    Up');
-    commands.draw();
-
-    commands.put({
-      x: 64, y: 5, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, '⇩    Down');
-    commands.draw();
-
-    commands.put({
-      x: 64, y: 7, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, '⇦    Left');
-    commands.draw();
-
-    commands.put({
-      x: 64, y: 9, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, '⇨    Right');
-    commands.draw();
-
-    commands.put({
-      x: 64, y: 11, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, '_    Enter');
-    commands.draw();
-
-    commands.put({
-      x: 64, y: 12, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, 'c    Clear');
-    commands.draw();
-
-    commands.put({
-      x: 62, y: 13, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, 'ESC    Menu');
-    commands.draw();
-
-    commands.put({
-      x: 62, y: 17, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, 'Level: ');
-    commands.draw();
-
-    commands.put({
-      x: 63, y: 19, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, 'Time: ');
-    commands.draw();
-
-    commands.put({
-      x: 59, y: 21, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
-    }, 'Remained: ');
-    commands.draw();
-    */
-
-
     let line = termkit.ScreenBufferHD.create({ dst: term , width: 8 , height: 1 }) ; 
     line.fill({ attr: {bgR: 200 , bgG: 160 ,	bgB: 0 ,	bgA: 125} }) ;
     line.x = 70 ,
@@ -226,7 +130,8 @@ const gfx = {
     if (levelNum === 1) level = 'easy';
     else if (levelNum === 2) level = 'medium';
     else if (levelNum === 3) level = 'hard';
-
+    term.bgColorRgb(200, 160, 0).colorRgb(51, 51, 51).bold.moveTo(71, 18, level.toString());
+    term.bgColorRgb(200, 160, 0).colorRgb(51, 51, 51).bold.moveTo(73, 22, remainedCell.toString());
   },
 
   drawLogo: (x, y) => {
@@ -263,48 +168,6 @@ const gfx = {
     attr: { color: 'yellow' , }} , '╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ') ;
     logo.draw() ;
 
-  /*
-    // x = 8; y = 5;
-    // sudoku sign
-    let logo = termkit.ScreenBuffer.create({ dst: term });
-
-    logo.put({
-      x: 3, y: 3,
-      attr: { color: 'yellow', }
-    }, '███████╗██╗   ██╗██████╗  ██████╗ ██╗  ██╗██╗   ██╗');
-    logo.draw();
-
-    logo.put({
-      x: 3, y: 4,
-      attr: { color: 'yellow', }
-    }, '██╔════╝██║   ██║██╔══██╗██╔═══██╗██║ ██╔╝██║   ██║');
-    logo.draw();
-
-    logo.put({
-      x: 3, y: 5,
-      attr: { color: 'yellow', }
-    }, '███████╗██║   ██║██║  ██║██║   ██║█████╔╝ ██║   ██║');
-    logo.draw();
-
-    logo.put({
-      x: 3, y: 6,
-      attr: { color: 'yellow', }
-    }, '╚════██║██║   ██║██║  ██║██║   ██║██╔═██╗ ██║   ██║');
-    logo.draw();
-
-    logo.put({
-      x: 3, y: 7,
-      attr: { color: 'yellow', }
-    }, '███████║╚██████╔╝██████╔╝╚██████╔╝██║  ██╗╚██████╔╝');
-    logo.draw();
-
-    logo.put({
-      x: 3, y: 8,
-      attr: { color: 'yellow', }
-    }, '╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ');
-    logo.draw();
-    */
-
   },
 
   drawInfoBar: () => {
@@ -329,8 +192,6 @@ const gfx = {
 
   printGametype: (select) => {
     let menu = termkit.ScreenBuffer.create({ dst: term });
-
-
     menu.put( {
 		x: 17 , y: 11 ,
 		attr: {color: 'black' , bgColor: 'brightWhite' } }  , '  Choose boardsize:  ') ;
@@ -602,7 +463,7 @@ const gfx = {
             break;
         }
         if (fixed[i][j] !== null) term.colorRgb(0, 0, 0).bold.moveTo(m, n, gameBoard[i][j].toString());
-        else term.green.moveTo(m, n, gameBoard[i][j].toString());
+        else term.colorRgb(51, 51, 51).moveTo(m, n, gameBoard[i][j].toString());
       }
     }
   },
@@ -681,7 +542,6 @@ const gfx = {
     }
     yesBtn.draw();
     noBtn.draw();
-
   }
 };
 

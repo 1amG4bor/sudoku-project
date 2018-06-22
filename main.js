@@ -137,16 +137,6 @@ term.on('key', function (key) {
             }
           }
           break;
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
       }
     } else if (gameState === 'editMode') {
       switch (key) {
@@ -180,7 +170,7 @@ const startClock = () => {
     clock++;
     term.saveCursor();
     userStat[1] = calculateTime(clock);
-    term.bgColorRgb(200, 160, 0).colorRgb(51, 51, 51).bold.moveTo(71, 20, userStat[1]);
+    term.bgColorRgb(200, 160, 0).colorRgb(51, 51, 51).bold.moveTo(72, 20, userStat[1]);
     term.restoreCursor();
   }, 1000);
 };
@@ -206,17 +196,17 @@ const reDraw = () => {
     case 'inTypeMenu':
       GFX.drawLogo(12, 5);
       GFX.drawChoosePanel();
-      GFX.printGametype(cursorState[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
+      GFX.printGametype(menuIndex[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
       break;
     case 'inLevelMenu':
       GFX.drawLogo(12, 5);
       GFX.drawChoosePanel();
-      GFX.printLevel(cursorState[1]); // options: 1-'easy', 2-'med', 3-'hard'
+      GFX.printLevel(menuIndex[1]); // options: 1-'easy', 2-'med', 3-'hard'
       break;
     case 'exitMenu':
       GFX.drawLogo(12, 5);
       GFX.drawChoosePanel();
-      GFX.printGametype(cursorState[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
+      GFX.printGametype(menuIndex[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
       GFX.exitQuestion(isExit);
       break;
     case 'inGame':
@@ -254,13 +244,13 @@ const saveCellModify = () => {
   }
 };
 
-const changeUserInput = (key) => {
+const changeUserInput = (inputKey) => {
   let limit;
   if (board.length > 9) limit = 2;
   else limit = 1;
-  if (limit === 1) userInput = key;
-  else if (userInput.length === 0) userInput = key;
-  else userInput = userInput.slice(userInput.length - 1) + key;
+  if (limit === 1) userInput = inputKey;
+  else if (userInput.length === 0) userInput = inputKey;
+  else userInput = userInput.slice(userInput.length - 1) + inputKey;
 };
 
 const calculateTime = (fullSec) => {
@@ -271,12 +261,6 @@ const calculateTime = (fullSec) => {
   if (sec < 10) time = min + ':0' + sec;
   else time = min + ':' + sec;
   return time;
-};
-
-const parseTo1D = (x, y, xLength) => {
-  let index = x + ((y * xLength) + 1);
-  if (x === 0) index--;
-  return index;
 };
 
 const winning = () => {
@@ -319,7 +303,6 @@ const winning = () => {
   congratulation.draw();
   congratulation.put({ x: 14, y: 18, attr: { color: 'black' , bgColor: 'yellow'} }, ' ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═══╝');
   congratulation.draw();
-
 };
 
 // Start the game

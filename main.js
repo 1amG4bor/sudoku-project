@@ -33,10 +33,14 @@ let userStat = ['', '', '', 'n/a'];
 let pressedKey = null;
 let startCycle = Date.now();
 let isPlay = false;
+let isExit = false;
 //      >>>   MAIN THREAD (event handler)   <<<
 term.grabInput();
 term.on('key', function (key) {
-  if (key === 'CTRL_C') { process.exit(); } // Detect CTRL-C and exit 'manually'
+  if (key === 'CTRL_C') {
+    term.hideCursor(false);
+    process.exit();
+  } // Detect CTRL-C and exit 'manually'
   if ((pressedKey !== key) || (key === pressedKey && Date.now() > startCycle + 100)) {
     startCycle = Date.now();
     pressedKey = key;
@@ -62,13 +66,30 @@ term.on('key', function (key) {
           else {
             gameState = 'inGame';
             makeBoard(menuIndex);
-            cursorState[0] = 2;
+            cursorState[0] = 0;
             cursorState[1] = 0;
             startClock(isPlay = true);
           }
           break;
         case 'ESCAPE':
           if (gameState === 'inLevelMenu') gameState = 'inTypeMenu';
+          if (gameState === 'inTypeMenu') gameState = 'exitMenu';
+          break;
+      }
+    } else if (gameState === 'exitMenu') {
+      switch (key) {
+        case 'LEFT':
+          isExit = true;
+          break;
+        case 'RIGHT':
+          isExit = false;
+          break;
+        case 'ENTER':
+          if (isExit) {
+            term.clear();
+            term.hideCursor(false);
+            process.exit();
+          } else gameState = 'inTypeMenu';
           break;
       }
     } else if (gameState === 'inGame') {
@@ -88,48 +109,39 @@ term.on('key', function (key) {
           if (cursorState[0] < end) cursorState[0]++;
           break;
         case 'ENTER':
-          if (fixed[cursorState[0]][cursorState[1]] === ' ') {
+          if (fixed[cursorState[0]][cursorState[1]] === ' ' && isPlay === true) {
             gameState = 'editMode';
             // term.green.moveTo(1, 1, 'acces granted!');
           } else {
             // term.red.moveTo(1, 1, 'acces denied! ');
           }
           userInput = board[cursorState[0]][cursorState[1]];
+          if (isPlay === false) gameState = 'inTypeMenu';
           break;
         case 'ESCAPE':
           isPlay = false;
           clearInterval(myclock);
           clock = 0;
           gameState = 'inTypeMenu';
-          // gameState = 'inGameMenu'
+          if (gameState === 'inLevelMenu') gameState = 'inTypeMenu';
           break;
         case 'C':
         case 'c':
-          if (fixed[cursorState[0]][cursorState[1]] === ' ') board[cursorState[0]][cursorState[1]] = '';
+          if (fixed[cursorState[0]][cursorState[1]] === ' ') board[cursorState[0]][cursorState[1]] = ' ';
           break;
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
+        default:
+          if (fixed[cursorState[0]][cursorState[1]] === ' ' && isPlay === true) {
+            if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
+              changeUserInput(key);
+              saveCellModify();
+            }
+          }
+          break;
       }
     } else if (gameState === 'editMode') {
       switch (key) {
         case 'ENTER':
-          board[cursorState[0]][cursorState[1]] = userInput;
-          userInput = '';
-          userStat[2] = remover.freeCellCounter(board).toString();
-          if (userStat[2] === '0') {
-            if (remover.checkSolutionCorrect(board, clonedBoard)) {
-              clearInterval(myclock);
-              isPlay = false;
-            } else gameState = 'inGame';
-          }
+          saveCellModify();
           gameState = 'inGame';
           break;
         case 'ESCAPE':
@@ -138,18 +150,14 @@ term.on('key', function (key) {
           break;
         default:
           if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
-            let limit;
-            if (board.length > 9) limit = 2;
-            else limit = 1;
-            if (limit === 1) userInput = key;
-            else if (userInput.length === 0) userInput = key;
-            else userInput = userInput.slice(userInput.length - 1) + key;
+            changeUserInput(key);
           }
           break;
       }
     }
-    if (gameState !== 'editMode') reDraw(gameState, menuIndex, cursorState);
-    else modifyCell(board, cursorState, userInput);
+    // rendering...
+    if (gameState === 'editMode') modifyCell();
+    else reDraw();
   }
 });
 
@@ -162,7 +170,7 @@ const startClock = () => {
     clock++;
     term.saveCursor();
     userStat[1] = calculateTime(clock);
-    term.bgColorRgb(255, 204, 0).black.moveTo(71, 18, userStat[1]);
+    term.bgColorRgb(200, 160, 0).colorRgb(51, 51, 51).bold.moveTo(72, 20, userStat[1]);
     term.restoreCursor();
   }, 1000);
 };
@@ -180,43 +188,69 @@ const makeBoard = (menuIndex) => {
   userStat[2] = remover.freeCellCounter(board).toString();
 };
 
-const reDraw = (menu, index, cursor) => {
+const reDraw = () => {
   console.log('\x1Bc');
   term.hideCursor();
   GFX.drawInterface();
-  switch (menu) {
+  switch (gameState) {
     case 'inTypeMenu':
       GFX.drawLogo(12, 5);
       GFX.drawChoosePanel();
-      GFX.printGametype(index[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
+      GFX.printGametype(menuIndex[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
       break;
     case 'inLevelMenu':
       GFX.drawLogo(12, 5);
       GFX.drawChoosePanel();
-      GFX.printLevel(index[1]); // options: 1-'easy', 2-'med', 3-'hard'
+      GFX.printLevel(menuIndex[1]); // options: 1-'easy', 2-'med', 3-'hard'
+      break;
+    case 'exitMenu':
+      GFX.drawLogo(12, 5);
+      GFX.drawChoosePanel();
+      GFX.printGametype(menuIndex[0]); // options: 1->'2x2', 2->'3x3', 3->'4x4'
+      GFX.exitQuestion(isExit);
       break;
     case 'inGame':
       GFX.drawGameBoard(board, fixed);
       break;
   }
   GFX.drawInfoBar();
-  if (menu === 'inGame') {
+  if (gameState === 'inGame') {
     GFX.drawMenu(menuIndex[1], clock, userStat[2], userStat[3]);
-    GFX.drawCursor(index, cursor, board);
+    GFX.drawCursor(menuIndex, cursorState, board);
   }
   // term.moveTo(3, 28, 'board> ' + board);
   // term.moveTo(1, 29, 'C-board> ' + clonedBoard);
   // term.moveTo(3, 30, 'fixed> ' + fixed);
-  if (isPlay === false && userStat[2] === '0') winning();
-  ctx.cursor.restore();
+  if ((isPlay === false && userStat[2] === '0') && (gameState !== 'inTypeMenu' && gameState !== 'inLevelMenu')) winning();
 };
 
-const modifyCell = (board, cursorState, userInput) => {
+const modifyCell = () => {
   let currentPos = GFX.calcPosition(cursorState[0], cursorState[1], board.length);
   term.moveTo(currentPos[0], currentPos[1]);
   term.setCursorColorRgb(255, 0, 0).red(userInput);
   term.moveTo(currentPos[0], currentPos[1]);
   term.hideCursor(false);
+};
+
+const saveCellModify = () => {
+  board[cursorState[0]][cursorState[1]] = userInput;
+  userInput = '';
+  userStat[2] = remover.freeCellCounter(board).toString();
+  if (userStat[2] === '0') {
+    if (remover.checkSolutionCorrect(board, clonedBoard)) {
+      clearInterval(myclock);
+      isPlay = false;
+    } else gameState = 'inGame';
+  }
+};
+
+const changeUserInput = (inputKey) => {
+  let limit;
+  if (board.length > 9) limit = 2;
+  else limit = 1;
+  if (limit === 1) userInput = inputKey;
+  else if (userInput.length === 0) userInput = inputKey;
+  else userInput = userInput.slice(userInput.length - 1) + inputKey;
 };
 
 const calculateTime = (fullSec) => {
@@ -229,28 +263,45 @@ const calculateTime = (fullSec) => {
   return time;
 };
 
-const parseTo1D = (x, y, xLength) => {
-  let index = x + ((y * xLength) + 1);
-  if (x === 0) index--;
-  return index;
-};
-
 const winning = () => {
-  let background = termkit.ScreenBufferHD.create({ dst: term, width: 30, height: 10 });
+  const yellow = 'bgR: 200, bgG: 160, bgB: 0, bgA: 125';
+  let background = termkit.ScreenBufferHD.create({ dst: term, width: 47, height: 17 });
   background.fill({ attr: { bgR: 0, bgG: 153, bgB: 153, bgA: 125 } });
-  background.x = 20;
+  background.x = 6;
   background.y = 5;
   background.draw();
-  let background2 = termkit.ScreenBufferHD.create({ dst: term, width: 26, height: 8 });
-  background2.fill({ attr: { bgR: 255, bgG: 204, bgB: 0, bgA: 125 } });
-  background2.x = 22;
+  let background2 = termkit.ScreenBufferHD.create({ dst: term, width: 43, height: 15 });
+  background2.fill({ attr: { bgR: 200, bgG: 160, bgB: 0, bgA: 125 } });
+  background2.x = 8;
   background2.y = 6;
   background2.draw();
-
+  
   let congratulation = termkit.ScreenBuffer.create({ dst: term });
-  congratulation.put({ x: 28, y: 8, attr: { color: 'black', bgColor: 'red' } }, 'Congratulation');
+  congratulation.put({ x: 15, y: 6, attr: { color: 'black' , bgColor: 'yellow'} }, '██╗   ██╗ ██████╗ ██╗   ██╗');
   congratulation.draw();
-  congratulation.put({ x: 28, y: 10, attr: { color: 'black', bgColor: 'red' } }, 'You Win');
+  congratulation.put({ x: 15, y: 7, attr: { color: 'black' , bgColor: 'yellow'} }, '╚██╗ ██╔╝██╔═══██╗██║   ██║');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 8, attr: { color: 'black' , bgColor: 'yellow'} }, ' ╚████╔╝ ██║   ██║██║   ██║');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 9, attr: { color: 'black' , bgColor: 'yellow'} }, '  ╚██╔╝  ██║   ██║██║   ██║');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 10, attr: { color: 'black' , bgColor: 'yellow'} }, '   ██║   ╚██████╔╝╚██████╔╝');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 11, attr: { color: 'black' , bgColor: 'yellow'} }, '   ╚═╝    ╚═════╝  ╚═════╝ ');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 12, attr: { color: 'black' , bgColor: 'yellow'} }, '                        ');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 13, attr: { color: 'black' , bgColor: 'yellow'} }, '██╗    ██╗ ██████╗ ███╗   ██╗');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 14, attr: { color: 'black' , bgColor: 'yellow'} }, '██║    ██║██╔═══██╗████╗  ██║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 15, attr: { color: 'black' , bgColor: 'yellow'} }, '██║ █╗ ██║██║   ██║██╔██╗ ██║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 16, attr: { color: 'black' , bgColor: 'yellow'} }, '██║███╗██║██║   ██║██║╚██╗██║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 17, attr: { color: 'black' , bgColor: 'yellow'} }, '╚███╔███╔╝╚██████╔╝██║ ╚████║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 18, attr: { color: 'black' , bgColor: 'yellow'} }, ' ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═══╝');
   congratulation.draw();
 };
 

@@ -7,6 +7,107 @@ let term = termkit.terminal;
 const gfx = {
   drawInterface: () => {
 
+    term.clear() ;
+
+    const background = termkit.ScreenBufferHD.create({ dst: term , width: 80 , height: 24 }) 
+    background.fill({ attr: {bgR: 51 , bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+    background.draw() ;
+
+    const frame = termkit.ScreenBufferHD.create({ dst: term , width: 80 , height: 1 }) 
+      frame.fill({ attr: {bgR: 0 , bgG: 153 ,	bgB: 153 ,	bgA: 125} }) ;
+      frame.x = 1 ,
+      frame.y = 1 ,
+      frame.draw() ;
+   
+      frame.x = 1 ,
+      frame.y = 24 ,
+      frame.draw() ;
+
+    const frame2 = termkit.ScreenBufferHD.create({ dst: term , width: 1 , height: 22 }) 
+      frame2.fill({ attr: {bgR: 0 , bgG: 153 ,	bgB: 153 ,	bgA: 125} }) ;
+      frame2.x = 1 ,
+      frame2.y = 2 ,
+      frame2.draw() ;
+
+      frame2.x = 80 ,
+      frame2.y = 2 ,
+      frame2.draw() ;
+
+      frame2.x = 57 ,
+      frame2.y = 2 ,
+      frame2.draw() ;
+
+    const frame3 = termkit.ScreenBufferHD.create({ dst: term , width: 23 , height: 1 }) ; 
+      frame3.fill({ attr: {bgR: 0 , bgG: 153 ,	bgB: 153 ,	bgA: 125} }) ;
+      frame3.x = 57 ,
+      frame3.y = 16 ,
+      frame3.draw() ;
+
+    term('\n') ;
+    
+    let commands = termkit.ScreenBuffer.create( { dst: term } ) ; 
+
+    commands.put( {
+	    x: 62 , y: 1 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      'Command list:') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 64 , y: 3 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      '⇧    Up') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 64 , y: 5 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      '⇩    Down') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 64 , y: 7 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      '⇦    Left') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 64 , y: 9 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      '⇨    Right') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 64 , y: 11 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      '_    Enter') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 62 , y: 13 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      'ESC    Menu') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 59 , y: 17 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      'Level: ') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 59 , y: 19 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      'Time: ') ;
+      commands.draw() ;
+
+    commands.put( {
+      x: 59 , y: 21 ,
+      attr: { color: 'yellow' , bgR: 0 , bgG: 0 , bgB: 0, bgA: 0 , bold: true }} , 
+      'Remained: ') ;
+      commands.draw() ;
+
+/*
     term.clear();
     let background = termkit.ScreenBufferHD.create({ dst: term, width: 80, height: 24 });
     background.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
@@ -99,22 +200,24 @@ const gfx = {
       x: 59, y: 21, attr: { color: 'yellow', bgR: 0, bgG: 0, bgB: 0, bgA: 0, bold: true }
     }, 'Remained: ');
     commands.draw();
+    */
 
-    /*let line = termkit.ScreenBufferHD.create({ dst: term , width: 8 , height: 1 }) ; 
-    line.fill({ attr: {bgR: 255 , bgG: 204 ,	bgB: 0 ,	bgA: 125} }) ;
+
+    let line = termkit.ScreenBufferHD.create({ dst: term , width: 8 , height: 1 }) ; 
+    line.fill({ attr: {bgR: 200 , bgG: 160 ,	bgB: 0 ,	bgA: 125} }) ;
     line.x = 70 ,
     line.y = 18 ,
     line.draw() ;  
 
-    line.fill({ attr: {bgR: 255 , bgG: 204 ,	bgB: 0 ,	bgA: 125} }) ;
+    line.fill({ attr: {bgR: 200 , bgG: 160 ,	bgB: 0 ,	bgA: 125} }) ;
     line.x = 70 ,
     line.y = 20 ,
     line.draw() ;  
 
-    line.fill({ attr: {bgR: 255 , bgG: 204 ,	bgB: 0 } }) ;
+    line.fill({ attr: {bgR: 200 , bgG: 160 ,	bgB: 0 } }) ;
     line.x = 70 ,
     line.y = 22 ,
-    line.draw() ;  */
+    line.draw() ;  
   },
 
   drawMenu: (levelNum, timer, remainedCell, ) => {
@@ -124,17 +227,43 @@ const gfx = {
     else if (levelNum === 2) level = 'medium';
     else if (levelNum === 3) level = 'hard';
 
-    /*
-    // test data
-    ctx.fg(0, 0, 0);
-    ctx.bg(255, 203, 0);
-    ctx.text(71, 18, level);
-    ctx.text(71, 20, time);
-    ctx.text(71, 22, remainedCell);
-    */
   },
 
   drawLogo: (x, y) => {
+
+    let logo = termkit.ScreenBuffer.create( { dst: term } ) ; 
+
+    logo.put( {
+		x: 3 , y: 3 ,
+		attr: { color: 'yellow' , }} , '███████╗██╗   ██╗██████╗  ██████╗ ██╗  ██╗██╗   ██╗') ;
+    logo.draw() ;
+
+    logo.put( {
+    x: 3 , y: 4 ,
+    attr: { color: 'yellow' , }} , '██╔════╝██║   ██║██╔══██╗██╔═══██╗██║ ██╔╝██║   ██║') ;
+    logo.draw() ;
+
+    logo.put( {
+    x: 3 , y: 5 ,
+    attr: { color: 'yellow' , }} , '███████╗██║   ██║██║  ██║██║   ██║█████╔╝ ██║   ██║') ;
+    logo.draw() ;
+
+    logo.put( {
+    x: 3 , y: 6 ,
+    attr: { color: 'yellow' , }} , '╚════██║██║   ██║██║  ██║██║   ██║██╔═██╗ ██║   ██║') ;
+    logo.draw() ;
+    
+    logo.put( {
+    x: 3 , y: 7 ,
+    attr: { color: 'yellow' , }} , '███████║╚██████╔╝██████╔╝╚██████╔╝██║  ██╗╚██████╔╝') ;
+    logo.draw() ;
+       
+    logo.put( {
+    x: 3 , y: 8 ,
+    attr: { color: 'yellow' , }} , '╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ') ;
+    logo.draw() ;
+
+  /*
     // x = 8; y = 5;
     // sudoku sign
     let logo = termkit.ScreenBuffer.create({ dst: term });
@@ -174,6 +303,8 @@ const gfx = {
       attr: { color: 'yellow', }
     }, '╚══════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ');
     logo.draw();
+    */
+
   },
 
   drawInfoBar: () => {
@@ -181,113 +312,145 @@ const gfx = {
   },
 
   drawChoosePanel: () => {
-    // panel for choosing menu
+  
+    const frame = termkit.ScreenBufferHD.create({ dst: term , width: 21 , height: 10 }) 
+    frame.fill({ attr: {bgR: 200 , bgG: 160 ,	bgB: 0 ,	bgA: 100} }) ;
+    frame.x = 18 ,
+    frame.y = 12 ,
+    frame.draw() ;
 
-    const frame = termkit.ScreenBufferHD.create({ dst: term, width: 21, height: 10 })
-    frame.fill({ attr: { bgR: 200, bgG: 160, bgB: 0, bgA: 100 } });
-    frame.x = 18,
-      frame.y = 12,
-      frame.draw();
+    const line = termkit.ScreenBufferHD.create({ dst: term , width: 21 , height: 1 }) 
+    line.fill({ attr: {bgR: 255 , bgG: 255 ,	bgB: 255 ,	bgA: 125} }) ;
+    line.x = 18 ,
+    line.y = 12 ,
+    line.draw() ;
 
-    const line = termkit.ScreenBufferHD.create({ dst: term, width: 21, height: 1 })
-    line.fill({ attr: { bgR: 255, bgG: 255, bgB: 255, bgA: 125 } });
-    line.x = 18,
-      line.y = 12,
-      line.draw();
-    /*
-    ctx.bg(255, 204, 53);
-    ctx.fg(0, 0, 0);
-    ctx.box(18, 12, 21, 11);
-*/
   },
 
   printGametype: (select) => {
     let menu = termkit.ScreenBuffer.create({ dst: term });
 
-    menu.put({
-      x: 17, y: 11,
-      attr: { color: 'black', bgColor: 'brightWhite' }
-    }, '  Choose boardsize:  ');
-    menu.draw();
+
+    menu.put( {
+		x: 17 , y: 11 ,
+		attr: {color: 'black' , bgColor: 'brightWhite' } }  , '  Choose boardsize:  ') ;
+    menu.draw() ;
+
     if (select === 1) {
-      highlight('on');
-    }
-    menu.put({
-      x: 22, y: 13,
-      attr: { color: 'black', bgColor: 'yellow' }
-    }, ' 2 x 2 [4] ');
-    menu.draw();
-    highlight('off');
+      menu.put( {
+        x: 20 , y: 13 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   2 x 2 [4]   ') ;
+    } else {
+      menu.put( {
+        x: 22 , y: 13 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' 2 x 2 [4]') ;
+    } 
+    menu.draw() ;
+
     if (select === 2) {
-      highlight('on');
+      menu.put( {
+        x: 20 , y: 16 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   3 x 3 [9]   ') ;
+    } else {
+      menu.put( {
+        x: 22 , y: 16 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' 3 x 3 [9] ') ;
     }
 
-    menu.put({
-      x: 22, y: 16,
-      attr: { color: 'black', bgColor: 'yellow' }
-    }, ' 3 x 3 [9] ');
-    menu.draw();
-    highlight('off');
+    menu.draw() ;
     if (select === 3) {
-      highlight('on');
-    }
-
-    menu.put({
-      x: 22, y: 19,
-      attr: { color: 'black', bgColor: 'yellow' }
-    }, ' 4 x 4 [16] ');
-    menu.draw();
-    highlight('off');
+      menu.put( {
+        x: 21 , y: 19 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '  4 x 4 [16]  ') ;
+    } else {
+      menu.put( {
+        x: 22 , y: 19 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' 4 x 4 [16] ') ;
+     }
+     menu.draw() ;
+  
   },
 
   printLevel: (select) => {
     let menu = termkit.ScreenBuffer.create({ dst: term });
 
-    menu.put({
-      x: 17, y: 11,
-      attr: { color: 'black', bgColor: 'brightWhite' }
-    }, '    Choose level:    ');
-    menu.draw();
+    menu.put( {
+		x: 17 , y: 11 ,
+		attr: {color: 'black' , bgColor: 'brightWhite' } }  , '    Choose level:    ') ;
+    menu.draw() ;
+    
     if (select === 1) {
-      highlight('on');
-    }
-    menu.put({
-      x: 25, y: 13,
-      attr: { color: 'black', bgColor: 'yellow' }
-    }, ' EASY ');
-    menu.draw();
-    highlight('off');
+      menu.put( {
+        x: 22 , y: 13 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   EASY   ') ;
+    } else {
+      menu.put( {
+        x: 24 , y: 13 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' EASY ') ;
+    } 
+    menu.draw() ;
     if (select === 2) {
-      highlight('on');
+      menu.put( {
+        x: 21 , y: 16 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   MEDIUM   ') ;
+    } else {
+      menu.put( {
+        x: 23 , y: 16 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' MEDIUM ') ;
     }
 
-    menu.put({
-      x: 24, y: 15,
-      attr: { color: 'black', bgColor: 'yellow' }
-    }, ' MEDIUM ');
-    menu.draw();
-    highlight('off');
+    menu.draw() ;
+
     if (select === 3) {
-      highlight('on');
-    }
+      menu.put( {
+        x: 22 , y: 19 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   HARD   ') ;
+    } else {
+      menu.put( {
+        x: 24 , y: 19 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' HARD ') ;
+     }
+     menu.draw() ;
+  },
 
-    menu.put({
-      x: 25, y: 17,
-      attr: { color: 'black', bgColor: 'yellow' }
-    }, ' HIGH ');
-    menu.draw();
-    highlight('off');
+  printMenu: (select) => {
+    let menu = termkit.ScreenBuffer.create( { dst: term } ) ; 
+
+    menu.put( {
+		x: 17 , y: 11 ,
+		attr: {color: 'black' , bgColor: 'brightWhite' } }  , '   Info Window:   ') ;
+    menu.draw() ;
+    
+    if (select === 1) {
+      menu.put( {
+        x: 21 , y: 13 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   New Game   ') ;
+    } else {
+      menu.put( {
+        x: 23 , y: 13 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' New Game ') ;
+    } 
+    menu.draw() ;
+    if (select === 2) {
+      menu.put( {
+        x: 21 , y: 16 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   New Game   ') ;
+    } else {
+      menu.put( {
+        x: 23 , y: 16 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' New Game ') ;
+    }
+    menu.draw() ;
     if (select === 3) {
-      highlight('on');
-    }
-
-    menu.put({
-      x: 20, y: 19,
-      attr: { color: 'black', bgColor: 'yellow' }
-    }, 'and press Enter');
-    menu.draw();
-    highlight('off');
-
+      menu.put( {
+        x: 21 , y: 19 ,
+        attr: {color: 'white' , bgColor: 'black' } } , '   Exit Game   ') ;
+    } else {
+      menu.put( {
+        x: 23 , y: 19 ,
+        attr: {color: 'black' , bgColor: 'yellow' } } , ' Exit Game ') ;
+     }
+     menu.draw() ;
   },
 
   drawGameBoard: (gameBoard, fixed) => {
@@ -298,12 +461,13 @@ const gfx = {
           for (let j = 0; j < 2; j++) {
             let x = 11 + (21 * j);
             let y = 4 + (11 * i);
-            if ((i + j) % 2 === 0) {
-              let grayBg = termkit.ScreenBufferHD.create({ dst: term, width: 16, height: 8 });
-              grayBg.fill({ attr: { bgR: 153, bgG: 153, bgB: 153, bgA: 255 } });
-              grayBg.x = x,
-                grayBg.y = y,
-                grayBg.draw();
+            if ((i + j) % 2 === 0) { 
+              let grayBg = termkit.ScreenBufferHD.create({ dst: term , width: 16 , height: 8 }) ; 
+                grayBg.fill({ attr: {bgR: 153, bgG: 153 ,	bgB: 153 ,	bgA: 125} }) ;
+                grayBg.x = x ,
+                grayBg.y = y ,
+                grayBg.draw() ;
+
             } else {
               let grayBg = termkit.ScreenBufferHD.create({ dst: term, width: 16, height: 8 });
               grayBg.fill({ attr: { bgR: 102, bgG: 102, bgB: 102, bgA: 125 } });
@@ -319,18 +483,19 @@ const gfx = {
           for (let j = 0; j < 3; j++) {
             let x = 10 + (13 * j);
             let y = 3 + (7 * i);
-            if ((i + j) % 2 === 0) {
-              let grayBg = termkit.ScreenBufferHD.create({ dst: term, width: 13, height: 7 });
-              grayBg.fill({ attr: { bgR: 153, bgG: 153, bgB: 153, bgA: 255 } });
-              grayBg.x = x,
-                grayBg.y = y,
-                grayBg.draw();
-            } else {
-              let grayBg = termkit.ScreenBufferHD.create({ dst: term, width: 13, height: 7 });
-              grayBg.fill({ attr: { bgR: 102, bgG: 102, bgB: 102, bgA: 125 } });
-              grayBg.x = x,
-                grayBg.y = y,
-                grayBg.draw();
+            if ((i + j) % 2 === 0) { 
+              let grayBg = termkit.ScreenBufferHD.create({ dst: term , width: 13 , height: 7 }) ; 
+                grayBg.fill({ attr: {bgR: 153, bgG: 153 ,	bgB: 153 ,	bgA: 125} }) ;
+                grayBg.x = x ,
+                grayBg.y = y ,
+                grayBg.draw() ;
+              } else {
+            let grayBg = termkit.ScreenBufferHD.create({ dst: term , width: 13 , height: 7 }) ; 
+            grayBg.fill({ attr: {bgR: 102 , bgG: 102 ,	bgB: 102 ,	bgA: 125} }) ;
+            grayBg.x = x ,
+            grayBg.y = y ,
+            grayBg.draw() ;
+
             }
           }
         }
@@ -340,63 +505,70 @@ const gfx = {
           for (let j = 0; j < 4; j++) {
             let x = 3 + (13 * j);
             let y = 3 + (5 * i);
-            if ((i + j) % 2 === 0) {
-              let grayBg = termkit.ScreenBufferHD.create({ dst: term, width: 13, height: 6 });
-              grayBg.fill({ attr: { bgR: 102, bgG: 102, bgB: 102, bgA: 125 } });
-              grayBg.x = x,
-                grayBg.y = y,
-                grayBg.draw();
-            } else {
-              let grayBg = termkit.ScreenBufferHD.create({ dst: term, width: 13, height: 6 });
-              grayBg.fill({ attr: { bgR: 153, bgG: 153, bgB: 153, bgA: 125 } });
-              grayBg.x = x,
-                grayBg.y = y,
-                grayBg.draw();
-            }
+
+            if ((i + j) % 2 === 0) { 
+              let grayBg = termkit.ScreenBufferHD.create({ dst: term , width: 12 , height: 6 }) ; 
+                grayBg.fill({ attr: {bgR: 102, bgG: 102 ,	bgB: 102 ,	bgA: 125} }) ;
+                grayBg.x = x ,
+                grayBg.y = y ,
+                grayBg.draw() ;
+              } else {
+            let grayBg = termkit.ScreenBufferHD.create({ dst: term , width: 12 , height: 6 }) ; 
+            grayBg.fill({ attr: {bgR: 153 , bgG: 153 ,	bgB: 153 ,	bgA: 125} }) ;
+            grayBg.x = x ,
+            grayBg.y = y ,
+            grayBg.draw() ;
+           }
           }
         }
+        
+        let grayBg = termkit.ScreenBufferHD.create({ dst: term , width: 53 , height: 1 }) ; 
+            grayBg.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg.x = 2 ,
+            grayBg.y = 3 ,
+            grayBg.draw() ;
 
-        let grayBg = termkit.ScreenBufferHD.create({ dst: term, width: 53, height: 1 });
-        grayBg.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg.x = 2,
-          grayBg.y = 3,
-          grayBg.draw();
+            grayBg.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg.x = 2 ,
+            grayBg.y = 8 ,
+            grayBg.draw();
 
-        grayBg.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg.x = 2,
-          grayBg.y = 8,
-          grayBg.draw();
+            grayBg.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg.x = 2 ,
+            grayBg.y = 13 ,
+            grayBg.draw();
 
-        grayBg.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg.x = 2,
-          grayBg.y = 13,
-          grayBg.draw();
+            grayBg.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg.x = 2 ,
+            grayBg.y = 18 ,
+            grayBg.draw();
 
-        grayBg.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg.x = 2,
-          grayBg.y = 18,
-          grayBg.draw();
+            grayBg.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg.x = 2 ,
+            grayBg.y = 23 ,
+            grayBg.draw();
 
-        grayBg.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg.x = 2,
-          grayBg.y = 23,
-          grayBg.draw();
+        let grayBg2 = termkit.ScreenBufferHD.create({ dst: term , width: 2 , height: 22 }) ; 
+            
+            grayBg2.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg2.x = 2 ,
+            grayBg2.y = 2 ,
+            grayBg2.draw() ;
+        
+            grayBg2.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg2.x = 15 ,
+            grayBg2.y = 2 ,
+            grayBg2.draw() ;
 
-        let grayBg2 = termkit.ScreenBufferHD.create({ dst: term, width: 2, height: 22 });
-        grayBg2.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg2.x = 15,
-          grayBg2.y = 2,
-          grayBg2.draw();
+            grayBg2.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg2.x = 28 ,
+            grayBg2.y = 2 ,
+            grayBg2.draw() ;
 
-        grayBg2.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg2.x = 28,
-          grayBg2.y = 2,
-          grayBg2.draw();
-
-        grayBg2.fill({ attr: { bgR: 51, bgG: 51, bgB: 51, bgA: 125 } });
-        grayBg2.x = 41,
-          grayBg2.y = 2,
-          grayBg2.draw();
+            grayBg2.fill({ attr: {bgR: 51, bgG: 51 ,	bgB: 51 ,	bgA: 125} }) ;
+            grayBg2.x = 41 ,
+            grayBg2.y = 2 ,
+            grayBg2.draw() ;
         break;
     }
 
@@ -417,12 +589,6 @@ const gfx = {
           grayBg.draw();
         }
 
-        /*
-                if (fixed[i][j] !== null) ctx.bg(0, 0, 0);
-                else if ((sectionX + sectiony) % 2 === 0) ctx.bg(102, 102, 102);
-                else (ctx.bg(51, 51, 51));
-                ctx.fg(0, 0, 0);
-        */
         switch (gameBoard.length) {
           case 4:
             ctx.box(m - 1, n, 3, 1);
@@ -432,10 +598,10 @@ const gfx = {
             break;
           case 16:
             if (parseInt(gameBoard[i][j]) < 10) m++;
-            ctx.box(m, n, 2, 1);
+            ctx.box(m, n, 1, 1);
             break;
         }
-        if (fixed[i][j] !== null) term.red.bold.moveTo(m, n, gameBoard[i][j].toString());
+        if (fixed[i][j] !== null) term.colorRgb(0, 0, 0).bold.moveTo(m, n, gameBoard[i][j].toString());
         else term.green.moveTo(m, n, gameBoard[i][j].toString());
       }
     }
@@ -445,7 +611,7 @@ const gfx = {
     let x = gfx.calcPosition(cursorState[0], cursorState[1], gameBoard.length)[0];
     let y = gfx.calcPosition(cursorState[0], cursorState[1], gameBoard.length)[1];
     ctx.bg(204, 153, 0);
-    ctx.fg(255, 0, 0);
+    ctx.fg(0, 0, 0);
     let value = gameBoard[cursorState[0]][cursorState[1]].toString();
     switch (menuIndex[0]) {
       case 1:
@@ -520,27 +686,7 @@ const gfx = {
 };
 
 module.exports = gfx;
-// EZ NEM MUKODIK
-function highlight(state) {
-  if (state === 'on') {
-    let highLigth = termkit.ScreenBufferHD.create({ dst: term, width: 10, height: 1 });
-    highLigth.fill({ attr: { bgR: 255, bgG: 0, bgB: 0, bgA: 125 } });
-    highLigth.draw();
-  } else {
-    let highLigth = termkit.ScreenBufferHD.create({ dst: term, width: 10, height: 1 });
-    highLigth.fill({ attr: { bgR: 0, bgG: 153, bgB: 153, bgA: 125 } });
-    highLigth.draw();
-  }
 
-  /*
-    if (state === 'on') {
-      ctx.bg(153, 0, 0);
-      ctx.fg(255, 153, 0);
-    } else {
-      ctx.bg(255, 153, 0);
-      ctx.fg(0, 0, 0);
-    }*/
-}
 
 function calculateTime(second) {
   let time;

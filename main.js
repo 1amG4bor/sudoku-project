@@ -123,7 +123,7 @@ term.on('key', function (key) {
           clearInterval(myclock);
           clock = 0;
           gameState = 'inTypeMenu';
-          // gameState = 'inGameMenu'
+          if (gameState === 'inLevelMenu') gameState = 'inTypeMenu';
           break;
         case 'C':
         case 'c':
@@ -137,6 +137,16 @@ term.on('key', function (key) {
             }
           }
           break;
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
       }
     } else if (gameState === 'editMode') {
       switch (key) {
@@ -170,7 +180,7 @@ const startClock = () => {
     clock++;
     term.saveCursor();
     userStat[1] = calculateTime(clock);
-    term.bgColorRgb(255, 204, 0).black.moveTo(71, 18, userStat[1]);
+    term.bgColorRgb(200, 160, 0).colorRgb(51, 51, 51).bold.moveTo(71, 20, userStat[1]);
     term.restoreCursor();
   }, 1000);
 };
@@ -270,22 +280,46 @@ const parseTo1D = (x, y, xLength) => {
 };
 
 const winning = () => {
-  let background = termkit.ScreenBufferHD.create({ dst: term, width: 30, height: 10 });
+  const yellow = 'bgR: 200, bgG: 160, bgB: 0, bgA: 125';
+  let background = termkit.ScreenBufferHD.create({ dst: term, width: 47, height: 17 });
   background.fill({ attr: { bgR: 0, bgG: 153, bgB: 153, bgA: 125 } });
-  background.x = 20;
+  background.x = 6;
   background.y = 5;
   background.draw();
-  let background2 = termkit.ScreenBufferHD.create({ dst: term, width: 26, height: 8 });
-  background2.fill({ attr: { bgR: 255, bgG: 204, bgB: 0, bgA: 125 } });
-  background2.x = 22;
+  let background2 = termkit.ScreenBufferHD.create({ dst: term, width: 43, height: 15 });
+  background2.fill({ attr: { bgR: 200, bgG: 160, bgB: 0, bgA: 125 } });
+  background2.x = 8;
   background2.y = 6;
   background2.draw();
-
+  
   let congratulation = termkit.ScreenBuffer.create({ dst: term });
-  congratulation.put({ x: 28, y: 8, attr: { color: 'black', bgColor: 'red' } }, 'Congratulation');
+  congratulation.put({ x: 15, y: 6, attr: { color: 'black' , bgColor: 'yellow'} }, '██╗   ██╗ ██████╗ ██╗   ██╗');
   congratulation.draw();
-  congratulation.put({ x: 28, y: 10, attr: { color: 'black', bgColor: 'red' } }, 'You Win');
+  congratulation.put({ x: 15, y: 7, attr: { color: 'black' , bgColor: 'yellow'} }, '╚██╗ ██╔╝██╔═══██╗██║   ██║');
   congratulation.draw();
+  congratulation.put({ x: 15, y: 8, attr: { color: 'black' , bgColor: 'yellow'} }, ' ╚████╔╝ ██║   ██║██║   ██║');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 9, attr: { color: 'black' , bgColor: 'yellow'} }, '  ╚██╔╝  ██║   ██║██║   ██║');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 10, attr: { color: 'black' , bgColor: 'yellow'} }, '   ██║   ╚██████╔╝╚██████╔╝');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 11, attr: { color: 'black' , bgColor: 'yellow'} }, '   ╚═╝    ╚═════╝  ╚═════╝ ');
+  congratulation.draw();
+  congratulation.put({ x: 15, y: 12, attr: { color: 'black' , bgColor: 'yellow'} }, '                        ');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 13, attr: { color: 'black' , bgColor: 'yellow'} }, '██╗    ██╗ ██████╗ ███╗   ██╗');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 14, attr: { color: 'black' , bgColor: 'yellow'} }, '██║    ██║██╔═══██╗████╗  ██║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 15, attr: { color: 'black' , bgColor: 'yellow'} }, '██║ █╗ ██║██║   ██║██╔██╗ ██║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 16, attr: { color: 'black' , bgColor: 'yellow'} }, '██║███╗██║██║   ██║██║╚██╗██║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 17, attr: { color: 'black' , bgColor: 'yellow'} }, '╚███╔███╔╝╚██████╔╝██║ ╚████║');
+  congratulation.draw();
+  congratulation.put({ x: 14, y: 18, attr: { color: 'black' , bgColor: 'yellow'} }, ' ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═══╝');
+  congratulation.draw();
+
 };
 
 // Start the game

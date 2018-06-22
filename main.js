@@ -88,13 +88,14 @@ term.on('key', function (key) {
           if (cursorState[0] < end) cursorState[0]++;
           break;
         case 'ENTER':
-          if (fixed[cursorState[0]][cursorState[1]] === ' ') {
+          if (fixed[cursorState[0]][cursorState[1]] === ' ' && isPlay === true) {
             gameState = 'editMode';
             // term.green.moveTo(1, 1, 'acces granted!');
           } else {
             // term.red.moveTo(1, 1, 'acces denied! ');
           }
           userInput = board[cursorState[0]][cursorState[1]];
+          if (isPlay === false) gameState = 'inTypeMenu';
           break;
         case 'ESCAPE':
           isPlay = false;
@@ -105,31 +106,21 @@ term.on('key', function (key) {
           break;
         case 'C':
         case 'c':
-          if (fixed[cursorState[0]][cursorState[1]] === ' ') board[cursorState[0]][cursorState[1]] = '';
+          if (fixed[cursorState[0]][cursorState[1]] === ' ') board[cursorState[0]][cursorState[1]] = ' ';
           break;
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
+        default:
+          if (fixed[cursorState[0]][cursorState[1]] === ' ' && isPlay === true) {
+            if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
+              changeUserInput(key);
+              saveCellModify();
+            }
+          }
+          break;
       }
     } else if (gameState === 'editMode') {
       switch (key) {
         case 'ENTER':
-          board[cursorState[0]][cursorState[1]] = userInput;
-          userInput = '';
-          userStat[2] = remover.freeCellCounter(board).toString();
-          if (userStat[2] === '0') {
-            if (remover.checkSolutionCorrect(board, clonedBoard)) {
-              clearInterval(myclock);
-              isPlay = false;
-            } else gameState = 'inGame';
-          }
+          saveCellModify();
           gameState = 'inGame';
           break;
         case 'ESCAPE':
@@ -138,12 +129,7 @@ term.on('key', function (key) {
           break;
         default:
           if (key.charCodeAt(0) > 47 && key.charCodeAt(0) < 58) {
-            let limit;
-            if (board.length > 9) limit = 2;
-            else limit = 1;
-            if (limit === 1) userInput = key;
-            else if (userInput.length === 0) userInput = key;
-            else userInput = userInput.slice(userInput.length - 1) + key;
+            changeUserInput(key);
           }
           break;
       }
@@ -204,10 +190,10 @@ const reDraw = (menu, index, cursor) => {
     GFX.drawMenu(menuIndex[1], clock, userStat[2], userStat[3]);
     GFX.drawCursor(index, cursor, board);
   }
-  // term.moveTo(3, 28, 'board> ' + board);
-  // term.moveTo(1, 29, 'C-board> ' + clonedBoard);
-  // term.moveTo(3, 30, 'fixed> ' + fixed);
-  if (isPlay === false && userStat[2] === '0') winning();
+  term.moveTo(3, 28, 'board> ' + board);
+  term.moveTo(1, 29, 'C-board> ' + clonedBoard);
+  term.moveTo(3, 30, 'fixed> ' + fixed);
+  if ((isPlay === false && userStat[2] === '0') && (gameState !== 'inTypeMenu' && gameState !== 'inLevelMenu')) winning();
   ctx.cursor.restore();
 };
 
@@ -217,6 +203,27 @@ const modifyCell = (board, cursorState, userInput) => {
   term.setCursorColorRgb(255, 0, 0).red(userInput);
   term.moveTo(currentPos[0], currentPos[1]);
   term.hideCursor(false);
+};
+
+const saveCellModify = () => {
+  board[cursorState[0]][cursorState[1]] = userInput;
+  userInput = '';
+  userStat[2] = remover.freeCellCounter(board).toString();
+  if (userStat[2] === '0') {
+    if (remover.checkSolutionCorrect(board, clonedBoard)) {
+      clearInterval(myclock);
+      isPlay = false;
+    } else gameState = 'inGame';
+  }
+};
+
+const changeUserInput = (key) => {
+  let limit;
+  if (board.length > 9) limit = 2;
+  else limit = 1;
+  if (limit === 1) userInput = key;
+  else if (userInput.length === 0) userInput = key;
+  else userInput = userInput.slice(userInput.length - 1) + key;
 };
 
 const calculateTime = (fullSec) => {

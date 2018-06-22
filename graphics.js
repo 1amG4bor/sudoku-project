@@ -1,7 +1,9 @@
 const ctx = require('axel');
+
 let tree = require('tree-kit');
 let termkit = require('/home/vargabi87/Desktop/sudoku-project/node_modules/terminal-kit/lib/termkit.js');
 let term = termkit.terminal;
+
 
 const gfx = {
   drawInterface: () => {
@@ -390,6 +392,7 @@ const gfx = {
         let n = gfx.calcPosition(i, j, gameBoard.length)[1];
         let sectionX = Math.floor(i / Math.sqrt(gameBoard.length));
         let sectiony = Math.floor(j / Math.sqrt(gameBoard.length));
+
         if ((sectionX + sectiony) % 2 === 0) {
           let grayBg = termkit.ScreenBufferHD.create({ dst: term , width: 1 , height: 1 }) ; 
             grayBg.fill({ attr: {bgR: 102, bgG: 102 ,	bgB: 102 ,	bgA: 255} }) ;
@@ -400,23 +403,26 @@ const gfx = {
           grayBg.draw() ;
         }
 
+/*
+        if (fixed[i][j] !== null) ctx.bg(0, 0, 0);
+        else if ((sectionX + sectiony) % 2 === 0) ctx.bg(102, 102, 102);
+        else (ctx.bg(51, 51, 51));
+        ctx.fg(0, 0, 0);
+*/
         switch (gameBoard.length) {
           case 4:
             ctx.box(m - 1, n, 3, 1);
-            if (gameBoard[i][j].toString() !== '') ctx.text(m, n, gameBoard[i][j].toString());
             break;
           case 9: // ok
             ctx.box(m - 1, n, 3, 1);
-            if (gameBoard[i][j].toString() !== '') ctx.text(m, n, gameBoard[i][j].toString());
             break;
           case 16:
+            if (parseInt(gameBoard[i][j]) < 10) m++;
             ctx.box(m, n, 2, 1);
-            if (gameBoard[i][j].toString() !== '') {
-              if (parseInt(gameBoard[i][j]) < 10) ctx.text(m + 1, n, gameBoard[i][j].toString());
-              else ctx.text(m, n, gameBoard[i][j].toString());
-            }
             break;
         }
+        if (fixed[i][j] !== null) term.red.bold.moveTo(m, n, gameBoard[i][j].toString());
+        else term.green.moveTo(m, n, gameBoard[i][j].toString());
       }
     }
   },
@@ -500,4 +506,3 @@ function calculateTime(second) {
   else time = min + ':' + sec;
   return time;
 }
-

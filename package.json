@@ -1,6 +1,6 @@
 {
   "name": "@flowacademy/sudoku",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "sudokuApp (student project) at Flow Academy",
   "main": "main.js",
   "bin": {
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/flowacademy/sudoku-project#readme",
   "dependencies": {
     "axel": "0.0.3",
-    "terminal-kit": "^1.17.11"
+    "terminal-kit": "^1.17.11",
+    "termkit": "^1.4.5"
   }
 }

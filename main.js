@@ -1,8 +1,9 @@
+#!/usr/bin/env node
 // ###===---> Sudoku v0.0.1 <---===###
 
 // npm Packages:
 // var tree = require('tree-kit');
-var termkit = require('./node_modules/terminal-kit/lib/termkit.js');
+var termkit = require('terminal-kit');
 var term = termkit.terminal;
 let ctx = require('axel');
 // OwnPackages
@@ -275,33 +276,33 @@ const winning = () => {
   background2.x = 8;
   background2.y = 6;
   background2.draw();
-  
+
   let congratulation = termkit.ScreenBuffer.create({ dst: term });
-  congratulation.put({ x: 15, y: 6, attr: { color: 'black' , bgColor: 'yellow'} }, '██╗   ██╗ ██████╗ ██╗   ██╗');
+  congratulation.put({ x: 15, y: 6, attr: { color: 'black', bgColor: 'yellow' } }, '██╗   ██╗ ██████╗ ██╗   ██╗');
   congratulation.draw();
-  congratulation.put({ x: 15, y: 7, attr: { color: 'black' , bgColor: 'yellow'} }, '╚██╗ ██╔╝██╔═══██╗██║   ██║');
+  congratulation.put({ x: 15, y: 7, attr: { color: 'black', bgColor: 'yellow' } }, '╚██╗ ██╔╝██╔═══██╗██║   ██║');
   congratulation.draw();
-  congratulation.put({ x: 15, y: 8, attr: { color: 'black' , bgColor: 'yellow'} }, ' ╚████╔╝ ██║   ██║██║   ██║');
+  congratulation.put({ x: 15, y: 8, attr: { color: 'black', bgColor: 'yellow' } }, ' ╚████╔╝ ██║   ██║██║   ██║');
   congratulation.draw();
-  congratulation.put({ x: 15, y: 9, attr: { color: 'black' , bgColor: 'yellow'} }, '  ╚██╔╝  ██║   ██║██║   ██║');
+  congratulation.put({ x: 15, y: 9, attr: { color: 'black', bgColor: 'yellow' } }, '  ╚██╔╝  ██║   ██║██║   ██║');
   congratulation.draw();
-  congratulation.put({ x: 15, y: 10, attr: { color: 'black' , bgColor: 'yellow'} }, '   ██║   ╚██████╔╝╚██████╔╝');
+  congratulation.put({ x: 15, y: 10, attr: { color: 'black', bgColor: 'yellow' } }, '   ██║   ╚██████╔╝╚██████╔╝');
   congratulation.draw();
-  congratulation.put({ x: 15, y: 11, attr: { color: 'black' , bgColor: 'yellow'} }, '   ╚═╝    ╚═════╝  ╚═════╝ ');
+  congratulation.put({ x: 15, y: 11, attr: { color: 'black', bgColor: 'yellow' } }, '   ╚═╝    ╚═════╝  ╚═════╝ ');
   congratulation.draw();
-  congratulation.put({ x: 15, y: 12, attr: { color: 'black' , bgColor: 'yellow'} }, '                        ');
+  congratulation.put({ x: 15, y: 12, attr: { color: 'black', bgColor: 'yellow' } }, '                        ');
   congratulation.draw();
-  congratulation.put({ x: 14, y: 13, attr: { color: 'black' , bgColor: 'yellow'} }, '██╗    ██╗ ██████╗ ███╗   ██╗');
+  congratulation.put({ x: 14, y: 13, attr: { color: 'black', bgColor: 'yellow' } }, '██╗    ██╗ ██████╗ ███╗   ██╗');
   congratulation.draw();
-  congratulation.put({ x: 14, y: 14, attr: { color: 'black' , bgColor: 'yellow'} }, '██║    ██║██╔═══██╗████╗  ██║');
+  congratulation.put({ x: 14, y: 14, attr: { color: 'black', bgColor: 'yellow' } }, '██║    ██║██╔═══██╗████╗  ██║');
   congratulation.draw();
-  congratulation.put({ x: 14, y: 15, attr: { color: 'black' , bgColor: 'yellow'} }, '██║ █╗ ██║██║   ██║██╔██╗ ██║');
+  congratulation.put({ x: 14, y: 15, attr: { color: 'black', bgColor: 'yellow' } }, '██║ █╗ ██║██║   ██║██╔██╗ ██║');
   congratulation.draw();
-  congratulation.put({ x: 14, y: 16, attr: { color: 'black' , bgColor: 'yellow'} }, '██║███╗██║██║   ██║██║╚██╗██║');
+  congratulation.put({ x: 14, y: 16, attr: { color: 'black', bgColor: 'yellow' } }, '██║███╗██║██║   ██║██║╚██╗██║');
   congratulation.draw();
-  congratulation.put({ x: 14, y: 17, attr: { color: 'black' , bgColor: 'yellow'} }, '╚███╔███╔╝╚██████╔╝██║ ╚████║');
+  congratulation.put({ x: 14, y: 17, attr: { color: 'black', bgColor: 'yellow' } }, '╚███╔███╔╝╚██████╔╝██║ ╚████║');
   congratulation.draw();
-  congratulation.put({ x: 14, y: 18, attr: { color: 'black' , bgColor: 'yellow'} }, ' ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═══╝');
+  congratulation.put({ x: 14, y: 18, attr: { color: 'black', bgColor: 'yellow' } }, ' ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═══╝');
   congratulation.draw();
 };
 

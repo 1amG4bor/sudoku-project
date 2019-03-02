@@ -1,24 +1,26 @@
 {
-  "name": "sudoku-project",
-  "version": "0.0.1",
+  "name": "@flowacademy/sudoku",
+  "version": "1.0.0",
   "description": "sudokuApp (student project) at Flow Academy",
   "main": "main.js",
+  "bin": {
+    "sudoku": "./main.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/1amG4bor/sudoku-project.git"
+    "url": "git+https://github.com/flowacademy/sudoku-project.git"
   },
-  "author": "g4bor, Ági, VarGabi87",
+  "author": "g4bor, Agi, VarGabi87",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/1amG4bor/sudoku-project/issues"
+    "url": "https://github.com/flowacademy/sudoku-project/issues"
   },
-  "homepage": "https://github.com/1amG4bor/sudoku-project#readme",
+  "homepage": "https://github.com/flowacademy/sudoku-project#readme",
   "dependencies": {
     "axel": "0.0.3",
     "terminal-kit": "^1.17.11"
-  },
-  "devDependencies": {}
+  }
 }
